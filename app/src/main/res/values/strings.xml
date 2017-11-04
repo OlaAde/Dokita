@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Doktari</string>
+
+    <string name="action_search">Search</string>
+    <string name="action_sign_up">Sign Up</string>
+    <string name="action_sign_in">Sign In</string>
+    <string name="action_select_country">Select Country</string>
+    <string name="action_select_language">Select Language</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_save">Save</string>
+    <string name="log_out">Sign Out</string>
+    <string name="action_profile">Profile</string>
+    <string name="send_button_label">Send</string>
+
+    //Greetings
+    <string name="good_morning_text">Good Morning</string>
+    <string name="good_afternoon_text">Good Afternoon</string>
+    <string name="good_evening_text">Good Evening</string>
+    <string name="good_night_text">Good Night</string>
+
+</resources>

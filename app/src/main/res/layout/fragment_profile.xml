@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context="com.work.adeogo.dokita.SignedMainActivity">
+
+    <!--<android.support.v7.widget.SearchView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginRight="30dp"-->
+        <!--android:layout_marginLeft="30dp"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:paddingRight="10dp"-->
+        <!--android:paddingLeft="10dp"-->
+        <!--android:queryHint="Search"-->
+        <!--android:id="@+id/signed_search_view"-->
+        <!--app:defaultQueryHint="Search"-->
+        <!--android:layout_marginBottom="5dp"-->
+        <!--android:paddingBottom="4dp"-->
+        <!--android:clickable="true"-->
+        <!--android:background="@drawable/rounded_edittext">-->
+
+    <!--</android.support.v7.widget.SearchView>-->
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:layout_marginBottom="10dp">-->
+
+        <!--<android.support.v7.widget.CardView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="200dp"-->
+            <!--android:layout_weight="1"-->
+            <!--card_view:cardCornerRadius="15dp"-->
+            <!--android:layout_marginTop="12dp"-->
+            <!--android:layout_marginLeft="6dp"-->
+            <!--android:layout_marginRight="6dp"-->
+            <!--android:layout_marginBottom="6dp">-->
+
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:background="#93ff68"-->
+                <!--android:layout_gravity="center">-->
+
+                <!--<ImageView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:src="@drawable/doctor3"-->
+                    <!--android:scaleType="centerCrop"/>-->
+                <!--<TextView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:background="#46585858"-->
+                    <!--android:gravity="center"-->
+                    <!--android:textAppearance="@style/TextAppearance.AppCompat.Large" />-->
+            <!--</RelativeLayout>-->
+
+
+        <!--</android.support.v7.widget.CardView>-->
+
+        <!--<android.support.v7.widget.CardView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="200dp"-->
+            <!--android:layout_weight="1"-->
+            <!--card_view:cardCornerRadius="15dp"-->
+            <!--android:layout_marginTop="12dp"-->
+            <!--android:layout_marginLeft="6dp"-->
+            <!--android:layout_marginRight="6dp"-->
+            <!--android:layout_marginBottom="6dp">-->
+
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:background="#e36b0f">-->
+
+                <!--<ImageView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:src="@drawable/hospital"-->
+                    <!--android:scaleType="centerCrop"/>-->
+
+
+
+                <!--<TextView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:gravity="center"-->
+                    <!--android:background="#46585858"-->
+                    <!--android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
+                    <!--/>-->
+            <!--</RelativeLayout>-->
+
+
+        <!--</android.support.v7.widget.CardView>-->
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:gravity="center"-->
+        <!--android:id="@+id/body_measurements_ll">-->
+
+        <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:src="@drawable/location"-->
+            <!--android:layout_margin="4dp"/>-->
+
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Body Measurements"-->
+            <!--android:layout_weight="1"-->
+            <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"-->
+            <!--android:layout_margin="12dp"-->
+            <!--android:textColor="#000"/>-->
+
+        <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:src="@drawable/chevron_right" />-->
+    <!--</LinearLayout>-->
+
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:background="#84606060"-->
+        <!--android:layout_marginLeft="35dp"-->
+        <!--android:layout_marginTop="4dp"/>-->
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:gravity="center"-->
+        <!--android:id="@+id/health_records_ll">-->
+
+        <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:src="@drawable/location"-->
+            <!--android:layout_margin="4dp"/>-->
+
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Health Records"-->
+            <!--android:layout_weight="1"-->
+            <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"-->
+            <!--android:layout_margin="12dp"-->
+            <!--android:textColor="#000"/>-->
+
+        <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:src="@drawable/chevron_right" />-->
+    <!--</LinearLayout>-->
+
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:background="#84606060"-->
+        <!--android:layout_marginLeft="35dp"-->
+        <!--android:layout_marginTop="4dp"/>-->
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:gravity="center"-->
+        <!--android:id="@+id/results_ll">-->
+
+        <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:src="@drawable/location"-->
+            <!--android:layout_margin="4dp"/>-->
+
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Results"-->
+            <!--android:layout_weight="1"-->
+            <!--android:layout_margin="12dp"-->
+            <!--android:textColor="#000"-->
+            <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />-->
+
+        <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:src="@drawable/chevron_right" />-->
+    <!--</LinearLayout>-->
+
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:background="#84606060"-->
+        <!--android:layout_marginLeft="35dp"-->
+        <!--android:layout_marginTop="4dp"/>-->
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:gravity="center"-->
+        <!--android:id="@+id/vitals_ll">-->
+
+        <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:src="@drawable/location"-->
+            <!--android:layout_margin="4dp"/>-->
+
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Vitals"-->
+            <!--android:layout_weight="1"-->
+            <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"-->
+            <!--android:layout_margin="12dp"-->
+            <!--android:textColor="#000"/>-->
+
+        <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:src="@drawable/chevron_right" />-->
+    <!--</LinearLayout>-->
+
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:background="#84606060"-->
+        <!--android:layout_marginLeft="35dp"-->
+        <!--android:layout_marginTop="4dp"/>-->
+
+</LinearLayout>

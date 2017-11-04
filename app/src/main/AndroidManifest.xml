@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.work.adeogo.dokita">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/icon_main"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/icon_main"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <activity
+            android:name="com.work.adeogo.dokita.OpeningAcvtivity"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+        <activity
+            android:name="com.work.adeogo.dokita.GetDataActivity"
+            android:parentActivityName="com.work.adeogo.dokita.OpeningAcvtivity" />
+        <activity
+            android:name="com.work.adeogo.dokita.SignedMainActivity"
+            android:parentActivityName="com.work.adeogo.dokita.OpeningAcvtivity" />
+        <activity
+            android:name="com.work.adeogo.dokita.BodyMeasurementActivity"
+            android:parentActivityName="com.work.adeogo.dokita.SignedMainActivity" />
+        <activity
+            android:name="com.work.adeogo.dokita.HealthRecordsActivity"
+            android:parentActivityName="com.work.adeogo.dokita.SignedMainActivity" />
+        <activity
+            android:name="com.work.adeogo.dokita.VitalsActivity"
+            android:parentActivityName="com.work.adeogo.dokita.SignedMainActivity" />
+        <activity
+            android:name="com.work.adeogo.dokita.ResultsActivity"
+            android:parentActivityName="com.work.adeogo.dokita.SignedMainActivity" />
+        <activity
+            android:name="com.work.adeogo.dokita.OrderActivity"
+            android:parentActivityName="com.work.adeogo.dokita.SearchActivity" />
+        <activity
+            android:name="com.work.adeogo.dokita.SearchActivity"
+            android:parentActivityName="com.work.adeogo.dokita.OpeningAcvtivity" />
+        <activity
+            android:name="com.work.adeogo.dokita.QuestionActivity"
+            android:parentActivityName="com.work.adeogo.dokita.OpeningAcvtivity" />
+        <activity android:name="com.work.adeogo.dokita.WelcomeBackActivity"
+            android:theme="@style/AppTheme.WelcomeBack">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

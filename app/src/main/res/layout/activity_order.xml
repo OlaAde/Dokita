@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.work.adeogo.dokita.OrderActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:scaleType="centerCrop"
+            android:id="@+id/profile_image"
+            android:src="@drawable/doctor1"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="10dp">
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/profile_name"
+                tools:text="Dipo Kolawolo"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/profile_speciality"
+                android:layout_marginTop="10dp"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                tools:text="General Surgeon"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimary"
+                    android:text="10:00"
+                    android:layout_margin="10dp"
+                    android:textColor="@color/white"
+                    android:padding="5dp"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:id="@+id/ten"
+                    android:layout_weight="1"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorPrimary"
+                    android:padding="5dp"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:text="12:00"
+                    android:textColor="@color/white"
+                    android:id="@+id/twelve"
+                    android:layout_weight="1"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimary"
+                    android:layout_weight="1"
+                    android:layout_margin="10dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:padding="5dp"
+                    android:gravity="center"
+                    android:text="16:00"
+                    android:id="@+id/four"/>
+
+            </LinearLayout>
+
+            <com.github.badoualy.datepicker.DatePickerTimeline
+                android:layout_margin="10dp"
+                android:id="@+id/date_picker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Book Appointment"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                android:gravity="center"
+                android:id="@+id/book_appointment"
+                android:textColor="@color/white"
+                android:padding="5dp"
+                android:background="@drawable/roundedbuttondark"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="Reviews"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+
+        </LinearLayout>
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/reviews_rv"></android.support.v7.widget.RecyclerView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="No Reviews!"
+                android:id="@+id/reviews_tv"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textStyle="bold"
+                android:padding="5dp"
+                android:gravity="center"/>
+        </FrameLayout>
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

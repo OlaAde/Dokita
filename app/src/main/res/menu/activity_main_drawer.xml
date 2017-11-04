@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/action_search"
+            android:icon="@drawable/account_search"
+            android:title="@string/action_search" />
+        <item
+            android:id="@+id/action_profile"
+            android:icon="@drawable/profile"
+            android:title="@string/action_profile" />
+        <item
+            android:id="@+id/action_sign_in"
+            android:icon="@drawable/location"
+            android:title="@string/action_sign_in" />
+        <item
+            android:id="@+id/action_select_country"
+            android:icon="@drawable/location"
+            android:title="@string/action_select_country" />
+        <item
+            android:id="@+id/action_select_language"
+            android:icon="@drawable/location"
+            android:title="@string/action_select_language" />
+    </group>
+
+    <item android:title="Сообщаться">
+
+
+
+    </item>
+
+</menu>
