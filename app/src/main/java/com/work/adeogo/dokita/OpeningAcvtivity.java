@@ -1,12 +1,15 @@
 package com.work.adeogo.dokita;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -42,7 +45,7 @@ public class OpeningAcvtivity extends AppCompatActivity {
     private RelativeLayout mSpecialityRelativeLayout;
     private RelativeLayout mCityRelativeLayout;
 
-    private TextView mNameTextView;
+    private EditText mNameEditText;
     private TextView mSpecialityTextView;
     private TextView mCityTextView;
 
@@ -78,7 +81,7 @@ public class OpeningAcvtivity extends AppCompatActivity {
         mSpecialityRelativeLayout = (RelativeLayout) findViewById(R.id.speciality_rl);
         mCityRelativeLayout = (RelativeLayout) findViewById(R.id.city_rl);
 
-        mNameTextView = (TextView) findViewById(R.id.name_tv);
+        mNameEditText = (EditText) findViewById(R.id.name_tv);
         mSpecialityTextView = (TextView) findViewById(R.id.speciality_tv);
         mCityTextView = (TextView) findViewById(R.id.city_tv);
 
@@ -86,6 +89,12 @@ public class OpeningAcvtivity extends AppCompatActivity {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
 
         mDoctorsReference = mFirebaseDatabase.getReference().child("doctors");
+
+        Typeface nameTypeface = Typeface.createFromAsset(getAssets(), "font/open_sans_semibold.ttf");
+        mNameEditText.setTypeface(nameTypeface);
+        mSpecialityTextView.setTypeface(nameTypeface);
+        mCityTextView.setTypeface(nameTypeface);
+        mSearchButton.setTypeface(nameTypeface);
 
         mSpecialityImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,7 +143,7 @@ public class OpeningAcvtivity extends AppCompatActivity {
         mProfileImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent1 = new Intent(OpeningAcvtivity.this, SignedMainActivity.class);
+                Intent intent1 = new Intent(OpeningAcvtivity.this, ProfileActivity.class);
                 startActivity(intent1);
             }
         });
@@ -147,27 +156,27 @@ public class OpeningAcvtivity extends AppCompatActivity {
             }
         });
 
-        mNameImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(OpeningAcvtivity.this, GetDataActivity.class);
-                intent.putExtra("int_setter",2);
-                intent.putExtra("city", mChosenCity);
-                intent.putExtra("speciality", mChosenSpeciality);
-                startActivity(intent);
-            }
-        });
-
-        mNameRelativeLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(OpeningAcvtivity.this, GetDataActivity.class);
-                intent.putExtra("int_setter",2);
-                intent.putExtra("city", mChosenCity);
-                intent.putExtra("speciality", mChosenSpeciality);
-                startActivity(intent);
-            }
-        });
+//        mNameImageView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(OpeningAcvtivity.this, GetDataActivity.class);
+//                intent.putExtra("int_setter",2);
+//                intent.putExtra("city", mChosenCity);
+//                intent.putExtra("speciality", mChosenSpeciality);
+//                startActivity(intent);
+//            }
+//        });
+//
+//        mNameRelativeLayout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(OpeningAcvtivity.this, GetDataActivity.class);
+//                intent.putExtra("int_setter",2);
+//                intent.putExtra("city", mChosenCity);
+//                intent.putExtra("speciality", mChosenSpeciality);
+//                startActivity(intent);
+//            }
+//        });
 
         if (mChosenCity!=null){
             mCityTextView.setText(mChosenCity);
@@ -176,7 +185,7 @@ public class OpeningAcvtivity extends AppCompatActivity {
             mSpecialityTextView.setText(mChosenSpeciality);
         }
         if (mChosenDoctorName != null){
-            mNameTextView.setText(mChosenDoctorName);
+            mNameEditText.setText(mChosenDoctorName);
         }
         mSignInTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -189,11 +198,12 @@ public class OpeningAcvtivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent1 = new Intent(OpeningAcvtivity.this, SearchActivity.class);
+                mChosenDoctorName = mNameEditText.getText().toString();
                 intent1.putExtra("city", mChosenCity);
                 intent1.putExtra("doctor_name", mChosenDoctorName);
                 intent1.putExtra("speciality", mChosenSpeciality);
 
-                if (mChosenCity == null && mChosenDoctorName == null && mChosenSpeciality == null){
+                if (mChosenCity == null && TextUtils.isEmpty(mChosenDoctorName) && mChosenSpeciality == null){
                     Toast.makeText(OpeningAcvtivity.this, "Select a query option", Toast.LENGTH_SHORT).show();
                 }else {
                     startActivity(intent1);
@@ -278,7 +288,6 @@ public class OpeningAcvtivity extends AppCompatActivity {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 }
-
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
                 public void onChildRemoved(DataSnapshot dataSnapshot) {}
                 public void onChildMoved(DataSnapshot dataSnapshot, String s) {}

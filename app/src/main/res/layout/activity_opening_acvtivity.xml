@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.work.adeogo.dokita.MainActivity">
+    tools:context="com.work.adeogo.dokita.OpeningAcvtivity">
     android:background="@drawable/doctor"
 
 
@@ -20,7 +20,7 @@
         android:layout_margin="10dp"
         android:padding="3dp"
         android:background="@drawable/roundedbutton2"
-        android:src="@drawable/profile"
+        app:srcCompat="@drawable/profile"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:id="@+id/profile"/>
@@ -31,7 +31,7 @@
         android:layout_margin="10dp"
         android:padding="3dp"
         android:background="@drawable/roundedbutton2"
-        android:src="@drawable/ic_help"
+        app:srcCompat="@drawable/ic_help"
         android:layout_below="@+id/profile"
         android:layout_alignParentRight="true"
         android:id="@+id/question_icon"/>
@@ -43,13 +43,14 @@
         android:layout_margin="10dp"
         android:id="@+id/name_rl"
         android:layout_above="@+id/speciality_rl">
-        <TextView
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:gravity="center"
             android:background="@drawable/rounded_edittext"
             android:textColorHint="#b2000000"
             android:hint="Chose Doctor Name"
+            android:textSize="16sp"
             android:id="@+id/name_tv"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
@@ -58,7 +59,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:src="@drawable/profile_orange"
+            app:srcCompat="@drawable/profile_orange"
             android:id="@+id/name_iv"
             android:layout_alignParentRight="true"/>
 
@@ -77,6 +78,7 @@
             android:background="@drawable/rounded_edittext"
             android:textColorHint="#b2000000"
             android:gravity="center"
+            android:textSize="16sp"
             android:id="@+id/speciality_tv"
             android:hint="Choose a speciality" />
 
@@ -84,7 +86,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:src="@drawable/ic_hospital"
+            app:srcCompat="@drawable/ic_hospital"
             android:id="@+id/speciality_iv"
             android:layout_alignParentRight="true"/>
 
@@ -101,6 +103,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:textSize="16sp"
             android:background="@drawable/rounded_edittext"
             android:hint="Choose a City"
             android:textColorHint="#b2000000"
@@ -113,7 +116,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:src="@drawable/location"
+            app:srcCompat="@drawable/location"
             android:id="@+id/city_iv"
             android:layout_alignParentRight="true"/>
 
@@ -151,4 +154,8 @@
 
     </LinearLayout>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/open_sans_condensed_light" />
 </RelativeLayout>

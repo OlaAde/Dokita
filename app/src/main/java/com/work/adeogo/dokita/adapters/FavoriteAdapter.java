@@ -13,33 +13,33 @@ import com.work.adeogo.dokita.R;
 import java.util.List;
 
 /**
- * Created by Adeogo on 10/8/2017.
+ * Created by Adeogo on 11/5/2017.
  */
 
-public class ListaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class FavoriteAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     Context mContext;
     private List<String> mList = null;
     private List<String> mTesterList = null;
 
-    private final ListAdapterOnclickHandler mClickHandler;
+    private final FavoriteAdapter.FavoriteAdapterOnclickHandler mClickHandler;
 
 
-    public interface ListAdapterOnclickHandler{
+    public interface FavoriteAdapterOnclickHandler{
         void voidMethod(List<String> list, int adapterPosition);
     }
 
-    public ListaAdapter(Context context, ListAdapterOnclickHandler listAdapterOnclickHandler){
+    public FavoriteAdapter(Context context, FavoriteAdapter.FavoriteAdapterOnclickHandler listAdapterOnclickHandler){
         mContext = context;
         mClickHandler = listAdapterOnclickHandler;
     }
 
 
-    public class ListAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        public final TextView mNameTextView;
+    public class FavoriteAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+//        public final TextView mNameTextView;
 
-        public ListAdapterViewHolder(View itemView) {
+        public FavoriteAdapterViewHolder(View itemView) {
             super(itemView);
-            mNameTextView = (TextView) itemView.findViewById(R.id.title_tv);
+//            mNameTextView = (TextView) itemView.findViewById(R.id.title_tv);
 
             itemView.setOnClickListener(this);
         }
@@ -56,28 +56,21 @@ public class ListaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view  = layoutInflater.inflate(R.layout.list_item, parent, false);
-        return new ListAdapterViewHolder(view);
+        View view  = layoutInflater.inflate(R.layout.list_item_favourite, parent, false);
+        return new FavoriteAdapter.FavoriteAdapterViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         String Title = null;
 
-        if(mList != null){
-             Title = mList.get(position);
-        }
-
-        Typeface nameTypeface = Typeface.createFromAsset(mContext.getAssets(), "font/open_sans_semibold.ttf");
-        ((ListAdapterViewHolder) holder).mNameTextView.setTypeface(nameTypeface);
-        ((ListAdapterViewHolder) holder).mNameTextView.setText(Title);
     }
 
 
     @Override
     public int getItemCount() {
         if(null == mList){
-            return 0;
+            return 5;
         }
         return mList.size();
     }

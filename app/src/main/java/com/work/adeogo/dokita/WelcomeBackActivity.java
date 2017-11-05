@@ -1,9 +1,11 @@
 package com.work.adeogo.dokita;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +22,7 @@ import java.util.TimerTask;
 public class WelcomeBackActivity extends AppCompatActivity {
 
     private TextView mWelcomeTextView;
+    private TextView mNameWelcomeTextView;
     private ImageView mWelcomeImageView;
 
     private FirebaseAuth mFirebaseAuth;
@@ -34,8 +37,14 @@ public class WelcomeBackActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome_back);
         mWelcomeTextView = (TextView) findViewById(R.id.welcomeTextView);
+        mNameWelcomeTextView = (TextView) findViewById(R.id.welcomeNameTextView);
         mWelcomeImageView = (ImageView) findViewById(R.id.background_image_welcome);
 
+
+        Typeface greetingsTypeface = Typeface.createFromAsset(getAssets(), "font/open_sans_light_italic.ttf");
+        Typeface nameTypeface = Typeface.createFromAsset(getAssets(), "font/open_sans_light.ttf");
+        mWelcomeTextView.setTypeface(greetingsTypeface);
+        mNameWelcomeTextView.setTypeface(nameTypeface);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
@@ -79,16 +88,20 @@ public class WelcomeBackActivity extends AppCompatActivity {
         Calendar c = Calendar.getInstance();
         int timeOfDay = c.get(Calendar.HOUR_OF_DAY);
         if(timeOfDay >= 0 && timeOfDay < 12){
-            mWelcomeTextView.setText( this.getString(R.string.good_morning_text) + "\n " + mUsername);
+            mWelcomeTextView.setText( this.getString(R.string.good_morning_text) + ",");
+            mNameWelcomeTextView.setText(mUsername);
             mWelcomeImageView.setImageResource(R.drawable.morning);
         }else if(timeOfDay >= 12 && timeOfDay < 16){
-            mWelcomeTextView.setText(this.getString(R.string.good_afternoon_text) + "\n " + mUsername);
+            mWelcomeTextView.setText(this.getString(R.string.good_afternoon_text) + ",");
+            mNameWelcomeTextView.setText(mUsername);
             mWelcomeImageView.setImageResource(R.drawable.afternoon);
         }else if(timeOfDay >= 16 && timeOfDay < 21){
-            mWelcomeTextView.setText(this.getString(R.string.good_evening_text) + "\n " + mUsername);
+            mWelcomeTextView.setText(this.getString(R.string.good_evening_text) + ",");
+            mNameWelcomeTextView.setText(mUsername);
             mWelcomeImageView.setImageResource(R.drawable.evening);
         }else if(timeOfDay >= 21 && timeOfDay < 24){
-            mWelcomeTextView.setText(this.getString(R.string.good_night_text) + "\n " + mUsername);
+            mNameWelcomeTextView.setText(mUsername);
+            mWelcomeTextView.setText(this.getString(R.string.good_night_text) + ",");
             mWelcomeImageView.setImageResource(R.drawable.night);
         }
     }

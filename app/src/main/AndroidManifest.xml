@@ -14,48 +14,52 @@
         android:roundIcon="@drawable/icon_main"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
-            android:name="com.work.adeogo.dokita.OpeningAcvtivity"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:name=".OpeningAcvtivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
-            android:name="com.work.adeogo.dokita.GetDataActivity"
-            android:parentActivityName="com.work.adeogo.dokita.OpeningAcvtivity" />
+            android:name=".GetDataActivity"
+            android:parentActivityName=".OpeningAcvtivity" />
         <activity
-            android:name="com.work.adeogo.dokita.SignedMainActivity"
-            android:parentActivityName="com.work.adeogo.dokita.OpeningAcvtivity" />
+            android:name=".SignedMainActivity"
+            android:parentActivityName=".OpeningAcvtivity" />
         <activity
-            android:name="com.work.adeogo.dokita.BodyMeasurementActivity"
-            android:parentActivityName="com.work.adeogo.dokita.SignedMainActivity" />
+            android:name=".BodyMeasurementActivity"
+            android:parentActivityName=".SignedMainActivity" />
         <activity
-            android:name="com.work.adeogo.dokita.HealthRecordsActivity"
-            android:parentActivityName="com.work.adeogo.dokita.SignedMainActivity" />
+            android:name=".HealthRecordsActivity"
+            android:parentActivityName=".SignedMainActivity" />
         <activity
-            android:name="com.work.adeogo.dokita.VitalsActivity"
-            android:parentActivityName="com.work.adeogo.dokita.SignedMainActivity" />
+            android:name=".VitalsActivity"
+            android:parentActivityName=".SignedMainActivity" />
         <activity
-            android:name="com.work.adeogo.dokita.ResultsActivity"
-            android:parentActivityName="com.work.adeogo.dokita.SignedMainActivity" />
+            android:name=".ResultsActivity"
+            android:parentActivityName=".SignedMainActivity" />
         <activity
-            android:name="com.work.adeogo.dokita.OrderActivity"
-            android:parentActivityName="com.work.adeogo.dokita.SearchActivity" />
+            android:name=".OrderActivity"
+            android:parentActivityName=".SearchActivity" />
         <activity
-            android:name="com.work.adeogo.dokita.SearchActivity"
-            android:parentActivityName="com.work.adeogo.dokita.OpeningAcvtivity" />
+            android:name=".SearchActivity"
+            android:parentActivityName=".OpeningAcvtivity" />
         <activity
-            android:name="com.work.adeogo.dokita.QuestionActivity"
-            android:parentActivityName="com.work.adeogo.dokita.OpeningAcvtivity" />
-        <activity android:name="com.work.adeogo.dokita.WelcomeBackActivity"
+            android:name=".QuestionActivity"
+            android:parentActivityName=".OpeningAcvtivity" />
+        <activity
+            android:name=".WelcomeBackActivity"
+            android:noHistory="true"
             android:theme="@style/AppTheme.WelcomeBack">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+
+        <activity android:name=".ProfileActivity"></activity>
     </application>
 
 </manifest>

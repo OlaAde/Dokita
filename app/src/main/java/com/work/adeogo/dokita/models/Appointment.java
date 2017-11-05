@@ -6,19 +6,21 @@ package com.work.adeogo.dokita.models;
 
 public class Appointment {
     private String ClientId;
-    private int Time;
+    private String Time;
     private int AcceptanceStatus;
     private int CompletionStatus;
     private int Year;
     private int Month;
     private int Day;
     private String Description;
+    private String DoctorName;
+    private String Location;
 
     public Appointment(){
     }
 
-    public Appointment(String clientId, int time, int acceptanceStatus, int completionStatus, int year, int month,
-                       int day, String description ){
+    public Appointment(String clientId, String time, int acceptanceStatus, int completionStatus, int year, int month,
+                       int day, String description, String doctorName, String location ){
         ClientId = clientId;
         Time = time;
         AcceptanceStatus = acceptanceStatus;
@@ -27,6 +29,8 @@ public class Appointment {
         Month = month;
         Day = day;
         Description = description;
+        DoctorName = doctorName;
+        Location = location;
     }
 
     public void setAcceptanceStatus(int acceptanceStatus) {
@@ -53,7 +57,15 @@ public class Appointment {
         Month = month;
     }
 
-    public void setTime(int time) {
+    public void setDoctorName(String doctorName) {
+        DoctorName = doctorName;
+    }
+
+    public void setLocation(String location) {
+        Location = location;
+    }
+
+    public void setTime(String time) {
         Time = time;
     }
 
@@ -77,12 +89,20 @@ public class Appointment {
         return Month;
     }
 
-    public int getTime() {
+    public String getTime() {
         return Time;
     }
 
     public int getYear() {
         return Year;
+    }
+
+    public String getDoctorName() {
+        return DoctorName;
+    }
+
+    public String getLocation() {
+        return Location;
     }
 
     public String getClientId() {

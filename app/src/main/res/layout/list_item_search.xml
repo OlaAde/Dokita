@@ -30,15 +30,47 @@
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                 android:layout_gravity="center"/>
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="10dp"
-                android:id="@+id/search_doctor_speciality"
-                tools:text="Surgeon"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                android:layout_gravity="center"/>
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/search_doctor_speciality"
+                    tools:text="Surgeon"
+                    android:layout_marginRight="15dp"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:layout_gravity="center"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="2dp"
+                    android:background="#e9e1e0e0"
+                    android:fontFamily="@font/open_sans_light"
+                    android:gravity="center"
+                    android:padding="3dp"
+                    android:text="Home"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/open_sans_light"
+                    android:background="#e9e1e0e0"
+                    android:padding="3dp"
+                    android:gravity="center"
+                    android:layout_margin="2dp"
+                    android:text="Online"
+                    android:layout_gravity="center"/>
+            </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 

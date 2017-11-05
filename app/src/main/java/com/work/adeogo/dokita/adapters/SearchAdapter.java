@@ -1,6 +1,7 @@
 package com.work.adeogo.dokita.adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,6 +51,11 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             mNameTextView = (TextView) itemView.findViewById(R.id.search_doctor_name);
             mSpecialityTextView = (TextView) itemView.findViewById(R.id.search_doctor_speciality);
             mDoctorImageView = (ImageView) itemView.findViewById(R.id.search_doctor_image);
+
+            Typeface nameTypeface = Typeface.createFromAsset(mContext.getAssets(), "font/open_sans_semibold.ttf");
+            Typeface specialityTypeface = Typeface.createFromAsset(mContext.getAssets(), "font/open_sans_light_italic.ttf");
+            mNameTextView.setTypeface(nameTypeface);
+            mSpecialityTextView.setTypeface(specialityTypeface);
             mShowLineView =  itemView.findViewById(R.id.show_line);
 
             itemView.setOnClickListener(this);

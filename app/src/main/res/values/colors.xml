@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#f9a03a</color>
-    <color name="colorPrimaryDark">#d08228</color>
+    <color name="colorPrimary">#F06060</color>
+    <color name="colorPrimaryDark">#c65959</color>
     <color name="colorAccent">#FF4081</color>
 
     <color name="material_green_50">#E8F5E9</color>
@@ -11,6 +11,24 @@
     <color name="material_lime_a700">#AEEA00</color>
     <color name="material_purple_a700">#AA00FF</color>
 
-    <color name="white">#f5eee8</color>
+    <color name="white">#ffffff</color>
     <color name="black">#000000</color>
+    <color name="blue1">#8CBEB2</color>
+
+
+    <color name="mti_default_primary">#8CBEB2</color>
+    <color name="mti_default_primary_dark">#54776f</color>
+
+    <color name="mti_lbl_tab_selected">#FFFFFF</color>
+    <color name="mti_lbl_tab_before_selection">#5affffff</color>
+
+    <color name="mti_lbl_day">#b3bdc2</color>
+
+    <color name="mti_lbl_date">#000</color>
+    <color name="mti_lbl_date_selected">#FFFFFF</color>
+    <color name="mti_bg_lbl_date_selected_color">#8CBEB2</color>
+    <color name="mti_ring_lbl_date_color">#d2f6eb</color>
+    <color name="mti_bg_lbl_today">#d6d6d6</color>
+
+    <color name="mti_lbl_label">#000</color>
 </resources>

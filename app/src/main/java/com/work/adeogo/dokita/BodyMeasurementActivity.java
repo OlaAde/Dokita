@@ -324,6 +324,7 @@ public class BodyMeasurementActivity extends AppCompatActivity implements Number
             mChildEventListener = null;
         }
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -353,6 +354,5 @@ public class BodyMeasurementActivity extends AppCompatActivity implements Number
         }
         detachDatabaseReadListener();
     }
-
 
 }

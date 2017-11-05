@@ -11,79 +11,126 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:scaleType="centerCrop"
-            android:id="@+id/profile_image"
-            android:src="@drawable/doctor1"/>
+        
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_gravity="center"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_margin="10dp"
+            tools:src="@drawable/doctor"
+            android:id="@+id/profile_image" />
+
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_margin="10dp">
-            <TextView
-                android:layout_marginTop="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/profile_name"
-                tools:text="Dipo Kolawolo"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
 
-            <TextView
+                <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/profile_speciality"
+                android:fontFamily="@font/open_sans_light_italic"
+                android:textColor="@color/black"
+                android:gravity="center"
                 android:layout_marginTop="10dp"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 tools:text="General Surgeon"/>
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:id="@+id/profile_name"
+                android:textColor="@color/black"
+                android:fontFamily="@font/open_sans_semibold"
+                tools:text="Dipo Kolawolo"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"/>
+
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorPrimary"
-                    android:text="10:00"
-                    android:layout_margin="10dp"
-                    android:textColor="@color/white"
-                    android:padding="5dp"
-                    android:gravity="center"
-                    android:textStyle="bold"
-                    android:id="@+id/ten"
-                    android:layout_weight="1"/>
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="1 year(s) in Dokitari"
+                        android:layout_margin="10dp"
+                        android:textColor="@color/black"
+                        android:padding="5dp"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:id="@+id/ten"
+                        android:layout_weight="1"/>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:background="@color/colorPrimary"
-                    android:padding="5dp"
-                    android:gravity="center"
-                    android:textStyle="bold"
-                    android:text="12:00"
-                    android:textColor="@color/white"
-                    android:id="@+id/twelve"
-                    android:layout_weight="1"/>
+                </LinearLayout>
 
-                <TextView
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorPrimary"
-                    android:layout_weight="1"
-                    android:layout_margin="10dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    android:padding="5dp"
-                    android:gravity="center"
-                    android:text="16:00"
-                    android:id="@+id/four"/>
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:padding="5dp"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:text="200+ appointments"
+                        android:textColor="@color/black"
+                        android:id="@+id/twelve"
+                        android:layout_weight="1"/>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_margin="10dp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:padding="5dp"
+                        android:gravity="center"
+                        android:text="9 years Experience"
+                        android:id="@+id/four"/>
+                </LinearLayout>
+
 
             </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/timePickingRecyclerView"></android.support.v7.widget.RecyclerView>
 
             <com.github.badoualy.datepicker.DatePickerTimeline
                 android:layout_margin="10dp"
@@ -92,23 +139,30 @@
                 android:layout_height="wrap_content"/>
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Book Appointment"
+                android:text="Book Now"
+                android:textColor="@color/white"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                 android:gravity="center"
+                android:layout_margin="10dp"
                 android:id="@+id/book_appointment"
-                android:textColor="@color/white"
-                android:padding="5dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
                 android:background="@drawable/roundedbuttondark"/>
+
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/open_sans_light"
                 android:text="Reviews"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         </LinearLayout>
 
@@ -126,6 +180,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="No Reviews!"
+                android:textColor="@color/black"
                 android:id="@+id/reviews_tv"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:textStyle="bold"

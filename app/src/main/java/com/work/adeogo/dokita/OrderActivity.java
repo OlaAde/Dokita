@@ -1,15 +1,20 @@
 package com.work.adeogo.dokita;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.work.adeogo.dokita.adapters.ListaAdapter;
+import com.work.adeogo.dokita.adapters.TimeAdapter;
 import com.work.adeogo.dokita.models.Appointment;
 import com.firebase.ui.auth.AuthUI;
 import com.github.badoualy.datepicker.DatePickerTimeline;
@@ -19,20 +24,29 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
+import com.work.adeogo.dokita.models.Time;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
-public class OrderActivity extends AppCompatActivity {
+import javax.xml.validation.TypeInfoProvider;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
+public class OrderActivity extends AppCompatActivity implements TimeAdapter.TimeAdapterOnclickHandler {
 
     private TextView mBookAppointmentTextView;
     private TextView mNameTextView;
     private TextView mSpecialityTextView;
 
-    private TextView mTenTextView;
-    private TextView mTwelveTextView;
-    private TextView mFourTextView;
-    private ImageView mProfileImageView;
+    private TimeAdapter mTimeAdapter;
+    private RecyclerView mTimeRecyclerView;
+    private LinearLayoutManager mManager;
+    private List<Time> mTimeList = new ArrayList<>();
+
+    private CircleImageView mProfileImageView;
 
     private DatePickerTimeline timeline;
     private int timeSetter;
@@ -42,7 +56,7 @@ public class OrderActivity extends AppCompatActivity {
     private String mDoctorNumber;
 
     private String mDateText;
-    private int mTimeInt = 0;
+    private String mTimeInt = null;
 
     private int mYear;
     private int mMonth;
@@ -53,6 +67,7 @@ public class OrderActivity extends AppCompatActivity {
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
+    private DatabaseReference mSelfDatabaseReference;
     private ChildEventListener mChildEventListener;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
@@ -75,10 +90,15 @@ public class OrderActivity extends AppCompatActivity {
         mBookAppointmentTextView = (TextView) findViewById(R.id.book_appointment);
         mNameTextView = (TextView) findViewById(R.id.profile_name);
         mSpecialityTextView = (TextView) findViewById(R.id.profile_speciality);
-        mTenTextView = (TextView) findViewById(R.id.ten);
-        mTwelveTextView = (TextView) findViewById(R.id.twelve);
-        mFourTextView = (TextView) findViewById(R.id.four);
-        mProfileImageView = (ImageView) findViewById(R.id.profile_image);
+
+        mProfileImageView = (CircleImageView) findViewById(R.id.profile_image);
+        mTimeRecyclerView = findViewById(R.id.timePickingRecyclerView);
+
+        Typeface semiBoldTypeface = Typeface.createFromAsset(getAssets(), "font/open_sans_semibold.ttf");
+        Typeface italicsTypeface = Typeface.createFromAsset(getAssets(), "font/open_sans_light_italic.ttf");
+        mNameTextView.setTypeface(semiBoldTypeface);
+        mSpecialityTextView.setTypeface(italicsTypeface);
+        mBookAppointmentTextView.setTypeface(semiBoldTypeface);
 
         Intent intent = getIntent();
         doctor_id = intent.getStringExtra("doctor_id");
@@ -87,7 +107,11 @@ public class OrderActivity extends AppCompatActivity {
         mPictureUrl =  intent.getStringExtra("picture_url");
         mPhoneNumber = intent.getStringExtra("phone_number");
 
+        mManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false);
+        mTimeAdapter = new TimeAdapter(this, this);
 
+        mTimeRecyclerView.setAdapter(mTimeAdapter);
+        mTimeRecyclerView.setLayoutManager(mManager);
         //firebase
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseAuth = FirebaseAuth.getInstance();
@@ -99,6 +123,7 @@ public class OrderActivity extends AppCompatActivity {
                     // User is signed in
                     userId = user.getUid();
                     mUsername = user.getDisplayName();
+                    mSelfDatabaseReference = mFirebaseDatabase.getReference().child("users/" + userId + "/appointments");
                     onSignedInInitialize(user.getDisplayName());
                 } else {
                     // User is signed out
@@ -116,7 +141,8 @@ public class OrderActivity extends AppCompatActivity {
             }
         };
 
-        mDatabaseReference = mFirebaseDatabase.getReference().child("doctors/" +doctor_id+ "/appointments");
+        mDatabaseReference = mFirebaseDatabase.getReference().child("doctors/" + doctor_id + "/appointments");
+
 
 
         //Custom DatePicker
@@ -135,15 +161,17 @@ public class OrderActivity extends AppCompatActivity {
         timeline.setOnDateSelectedListener(new DatePickerTimeline.OnDateSelectedListener() {
             @Override
             public void onDateSelected(int year, int month, int day, int index) {
-                Toast.makeText(OrderActivity.this, year + " " + month +" " + day , Toast.LENGTH_SHORT).show();
                 mDateText = day + "/" + month + "/" + year;
+                mDay = day;
+                mMonth = month;
+                mYear = year;
             }
         });
 
         mBookAppointmentTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mTimeInt == 0){
+                if (mTimeInt == null){
                     Toast.makeText(OrderActivity.this, "You forgot to pick a Time", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -155,7 +183,7 @@ public class OrderActivity extends AppCompatActivity {
             }
         });
 
-
+        setTimes();
 
         mNameTextView.setText(mDoctorName);
         mSpecialityTextView.setText(mDoctorSpecialist);
@@ -163,50 +191,51 @@ public class OrderActivity extends AppCompatActivity {
                 .load(mPictureUrl)
                 .into(mProfileImageView);
 
-        mTenTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                timeSetter = 0;
-                checkTimeSetter();
-            }
-        });
-        mFourTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                timeSetter = 2;
-                checkTimeSetter();
-            }
-        });
-        mTwelveTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                timeSetter = 1;
-                checkTimeSetter();
-            }
-        });
+//        mTenTextView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                timeSetter = 0;
+//                checkTimeSetter();
+//            }
+//        });
+//        mFourTextView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                timeSetter = 2;
+//                checkTimeSetter();
+//            }
+//        });
+//        mTwelveTextView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                timeSetter = 1;
+//                checkTimeSetter();
+//            }
+//        });
     }
 
-    private void checkTimeSetter(){
-        if(timeSetter == 0){
-            mFourTextView.setTextColor(getResources().getColor(R.color.white));
-            mTenTextView.setTextColor(getResources().getColor(R.color.black));
-            mTwelveTextView.setTextColor(getResources().getColor(R.color.white));
-            mTimeInt = 10;
-        }else if (timeSetter == 1){
-            mTenTextView.setTextColor(getResources().getColor(R.color.white));
-            mFourTextView.setTextColor(getResources().getColor(R.color.white));
-            mTwelveTextView.setTextColor(getResources().getColor(R.color.black));
-            mTimeInt = 12;
-        }else if (timeSetter == 2){
-            mTwelveTextView.setTextColor(getResources().getColor(R.color.white));
-            mFourTextView.setTextColor(getResources().getColor(R.color.black));
-            mTenTextView.setTextColor(getResources().getColor(R.color.white));
-            mTimeInt = 16;
-        }
-    }
+//    private void checkTimeSetter(){
+//        if(timeSetter == 0){
+//            mFourTextView.setTextColor(getResources().getColor(R.color.white));
+//            mTenTextView.setTextColor(getResources().getColor(R.color.black));
+//            mTwelveTextView.setTextColor(getResources().getColor(R.color.white));
+//            mTimeInt = 10;
+//        }else if (timeSetter == 1){
+//            mTenTextView.setTextColor(getResources().getColor(R.color.white));
+//            mFourTextView.setTextColor(getResources().getColor(R.color.white));
+//            mTwelveTextView.setTextColor(getResources().getColor(R.color.black));
+//            mTimeInt = 12;
+//        }else if (timeSetter == 2){
+//            mTwelveTextView.setTextColor(getResources().getColor(R.color.white));
+//            mFourTextView.setTextColor(getResources().getColor(R.color.black));
+//            mTenTextView.setTextColor(getResources().getColor(R.color.white));
+//            mTimeInt = 16;
+//        }
+//    }
 
     private void sendAppointment(){
-        mDatabaseReference.push().setValue(new Appointment(userId, mTimeInt, 0, 0, mYear, mMonth, mDay, mDoctorNumber ));
+        mDatabaseReference.push().setValue(new Appointment(userId, mTimeInt, 0, 0, mYear, mMonth, mDay, mDoctorNumber, mDoctorName, "The General Hospital"));
+        mSelfDatabaseReference.push().setValue(new Appointment(userId, mTimeInt, 0, 0, mYear, mMonth, mDay, mDoctorNumber, mDoctorName, "The General Hospital"));
         mPhoneNumber.trim();
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms",  mPhoneNumber, null));
         mOrderTxt = mUsername + " would like to make an appointment with you on " + mDateText + ".";
@@ -237,6 +266,30 @@ public class OrderActivity extends AppCompatActivity {
         }
     }
 
+    private void setTimes(){
+        mTimeList.add(new Time("10:00", 1));
+        mTimeList.add(new Time("10:30", 1));
+        mTimeList.add(new Time("11:00", 1));
+        mTimeList.add(new Time("11:30", 1));
+        mTimeList.add(new Time("12:30", 1));
+        mTimeList.add(new Time("13:00", 1));
+        mTimeList.add(new Time("13:30", 1));
+        mTimeList.add(new Time("14:00", 1));
+        mTimeList.add(new Time("14:30", 1));
+        mTimeList.add(new Time("15:00", 1));
+        mTimeList.add(new Time("15:30", 1));
+        mTimeList.add(new Time("16:30", 1));
+
+        mTimeAdapter.swapData(mTimeList);
+    }
+
+    private void setPickedTime(int position){
+        mTimeList.get(position).setPicked(0);
+        mTimeInt = mTimeList.get(position).getTime();
+        mTimeAdapter.swapData(mTimeList);
+        Toast.makeText(this, mTimeInt, Toast.LENGTH_SHORT).show();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -249,5 +302,10 @@ public class OrderActivity extends AppCompatActivity {
         if (mAuthStateListener != null) {
             mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
         }
+    }
+
+    @Override
+    public void voidMethod(List<Time> list, int adapterPosition) {
+        setPickedTime(adapterPosition);
     }
 }
