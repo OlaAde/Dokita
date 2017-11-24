@@ -5,17 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.work.adeogo.dokita.GetDataActivity">
+    tools:context="com.upload.adeogo.dokita.GetDataActivity">
 
 
     <android.support.v7.widget.SearchView
         android:id="@+id/searchview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
     <View
         android:layout_width="wrap_content"
         android:layout_height="1dp"
-        android:background="#a9a9a9"></View>
+        android:background="#a9a9a9"/>
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"

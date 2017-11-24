@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context="com.work.adeogo.dokita.SignedMainActivity">
+    tools:context="com.upload.adeogo.dokita.SignedMainActivity">
 
     <!--<android.support.v7.widget.SearchView-->
         <!--android:layout_width="match_parent"-->

@@ -58,7 +58,7 @@
                         android:id="@+id/card_DoctorName"
                         android:textColor="@color/black"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                        />
+                        android:gravity="center"/>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -68,7 +68,7 @@
                         android:id="@+id/card_DoctorPlace"
                         android:textColor="@color/black"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                        />
+                        android:gravity="center"/>
                 </LinearLayout>
 
             </LinearLayout>
@@ -87,11 +87,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center_vertical"
+                android:layout_gravity="center"
+                android:gravity="center"
                 android:textColor="#174142"
+                android:textSize="14sp"
                 android:fontFamily="@font/open_sans_semibold"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                android:text="View/Change"/>
+                android:text="View"/>
             <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
@@ -100,20 +102,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_weight="1">
+                android:gravity="center"
+                android:layout_weight="1"
+                android:id="@+id/cancel_ll">
 
                 <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    app:srcCompat="@drawable/location_blue"/>
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    app:srcCompat="@drawable/ic_clear_black_24px"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:fontFamily="@font/open_sans_semibold"
                     android:layout_height="wrap_content"
-                    android:text="Directions"
+                    android:text="Cancel"
+                    android:id="@+id/cancel_tv"
                     android:textColor="#174142"
+                    android:textSize="14sp"
+                    android:layout_gravity="center"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
             </LinearLayout>
         </LinearLayout>

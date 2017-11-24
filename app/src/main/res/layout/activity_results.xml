@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.work.adeogo.dokita.ResultsActivity">
+    tools:context="com.upload.adeogo.dokita.ResultsActivity">
 
     <TextView
         android:layout_width="match_parent"

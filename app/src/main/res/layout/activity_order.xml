@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.work.adeogo.dokita.OrderActivity">
+    tools:context="com.upload.adeogo.dokita.OrderActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -64,12 +64,15 @@
                     android:layout_weight="1">
                     <ImageView
                         android:layout_width="20dp"
-                        android:layout_height="20dp" />
+                        android:layout_height="20dp"
+                        android:layout_gravity="center" />
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="1 year(s) in Dokitari"
-                        android:layout_margin="10dp"
+                        android:text="1 year(s) in \nDokitari"
+                        android:layout_margin="5dp"
+                        android:textSize="10sp"
+                        android:fontFamily="@font/open_sans_semibold"
                         android:textColor="@color/black"
                         android:padding="5dp"
                         android:gravity="center"
@@ -87,15 +90,18 @@
                     android:layout_weight="1">
                     <ImageView
                         android:layout_width="20dp"
-                        android:layout_height="20dp" />
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"/>
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
+                        android:layout_margin="5dp"
                         android:padding="5dp"
                         android:gravity="center"
                         android:textStyle="bold"
-                        android:text="200+ appointments"
+                        android:textSize="10sp"
+                        android:fontFamily="@font/open_sans_semibold"
+                        android:text="200+ \nappointments"
                         android:textColor="@color/black"
                         android:id="@+id/twelve"
                         android:layout_weight="1"/>
@@ -109,17 +115,20 @@
                     android:layout_weight="1">
                     <ImageView
                         android:layout_width="20dp"
-                        android:layout_height="20dp" />
+                        android:layout_height="20dp"
+                        android:layout_gravity="center" />
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_margin="10dp"
+                        android:layout_margin="5dp"
                         android:textStyle="bold"
+                        android:textSize="10sp"
+                        android:fontFamily="@font/open_sans_semibold"
                         android:textColor="@color/black"
                         android:padding="5dp"
                         android:gravity="center"
-                        android:text="9 years Experience"
+                        android:text="9 years \nExperience"
                         android:id="@+id/four"/>
                 </LinearLayout>
 

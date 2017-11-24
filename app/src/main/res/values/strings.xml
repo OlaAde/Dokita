@@ -20,5 +20,6 @@
     <string name="good_afternoon_text">Good Afternoon</string>
     <string name="good_evening_text">Good Evening</string>
     <string name="good_night_text">Good Night</string>
+    <string name="action_chat">Chat</string>
 
 </resources>

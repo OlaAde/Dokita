@@ -15,6 +15,14 @@
     <color name="black">#000000</color>
     <color name="blue1">#8CBEB2</color>
 
+    <color name="bottomText">#6b6b76</color>
+    <color name="rippleEffectColor">#f816a463</color>
+    <color name="btnSignIn">#1fbad6</color>
+    <color name="btnRegister">#83838c</color>
+
+    <color name="baseReleaseColor">#212121</color>
+    <color name="basePressColor">#FAFAFA</color>
+    <color name="ballReleaseColor">#9E9E9E</color>
 
     <color name="mti_default_primary">#8CBEB2</color>
     <color name="mti_default_primary_dark">#54776f</color>

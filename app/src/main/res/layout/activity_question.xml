@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="5dp"
-    tools:context="com.work.adeogo.dokita.QuestionActivity">
+    tools:context="com.upload.adeogo.dokita.QuestionActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,8 +25,8 @@
             android:id="@+id/questionLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:layout_weight="1"
-            android:visibility="gone"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
@@ -71,15 +71,6 @@
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
         android:gravity="center"/>
 
-    <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_margin="20dp"
-        android:id="@+id/add_question"
-        android:background="@drawable/roundedbutton1"
-        android:src="@drawable/ic_add_black_24px"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"/>
 
 
 </RelativeLayout>

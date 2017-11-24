@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.work.adeogo.dokita">
+    package="com.upload.adeogo.dokita">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
@@ -16,13 +16,14 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".OpeningAcvtivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:launchMode="singleTop"
+            android:theme="@style/MyTheme2" />
         <activity
             android:name=".GetDataActivity"
             android:parentActivityName=".OpeningAcvtivity" />
         <activity
             android:name=".SignedMainActivity"
-            android:parentActivityName=".OpeningAcvtivity" />
+            android:parentActivityName=".ProfileActivity" />
         <activity
             android:name=".BodyMeasurementActivity"
             android:parentActivityName=".SignedMainActivity" />
@@ -40,6 +41,7 @@
             android:parentActivityName=".SearchActivity" />
         <activity
             android:name=".SearchActivity"
+            android:launchMode="singleTop"
             android:parentActivityName=".OpeningAcvtivity" />
         <activity
             android:name=".QuestionActivity"
@@ -55,11 +57,22 @@
             </intent-filter>
         </activity>
 
+        <provider
+            android:name=".data.DokitariProvider"
+            android:authorities="com.upload.adeogo.dokita"
+            android:exported="false" />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".ProfileActivity"></activity>
+        <activity
+            android:name=".ProfileActivity"
+            android:parentActivityName=".OpeningAcvtivity" />
+
+        <activity android:name=".QuestionListActivity"></activity>
+
+        <activity android:name=".LoginActivity"></activity>
     </application>
 
 </manifest>
