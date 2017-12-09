@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.upload.adeogo.dokita.OpeningAcvtivity">
+    tools:context="com.upload.adeogo.dokita.activities.OpeningAcvtivity">
     android:background="@drawable/doctor"
 
 
@@ -47,6 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:gravity="center"
+            android:singleLine="true"
             android:background="@drawable/rounded_edittext"
             android:textColorHint="#b2000000"
             android:hint="Chose Doctor Name"

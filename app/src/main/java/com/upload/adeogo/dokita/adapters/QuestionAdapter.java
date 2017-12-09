@@ -33,10 +33,8 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
         CardView notYouCardView = convertView.findViewById(R.id.mNotYouMessage);
 
         TextView youMessageTextView = (TextView) convertView.findViewById(R.id.youQuestionMessageTextView);
-        TextView youNameTextView = (TextView) convertView.findViewById(R.id.youQuestionNameTextView);
 
         TextView messageTextView = (TextView) convertView.findViewById(R.id.questionMessageTextView);
-        TextView nameTextView = (TextView) convertView.findViewById(R.id.questionNameTextView);
 
         Question question = getItem(position);
 
@@ -46,12 +44,10 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
             notYouCardView.setVisibility(View.GONE);
             youCardView.setVisibility(View.VISIBLE);
             youMessageTextView.setText(question.getText());
-            youNameTextView.setText(question.getName());
         }else if (check == 1){
             youCardView.setVisibility(View.GONE);
             notYouCardView.setVisibility(View.VISIBLE);
             messageTextView.setText(question.getText());
-            nameTextView.setText(question.getName());
 
         }
 

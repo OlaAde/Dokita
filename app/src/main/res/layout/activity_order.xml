@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.upload.adeogo.dokita.OrderActivity">
+    tools:context="com.upload.adeogo.dokita.activities.OrderActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -151,7 +151,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Book Now"
+                android:text="Request Appointment"
                 android:textColor="@color/white"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                 android:gravity="center"

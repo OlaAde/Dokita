@@ -45,7 +45,7 @@
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/edtName"
             android:hint="Name"
-            android:inputType="text"
+            android:inputType="textCapWords"
             android:textColor="@color/colorPrimary"
             android:textColorHint="@color/colorPrimary"
             android:layout_width="match_parent"

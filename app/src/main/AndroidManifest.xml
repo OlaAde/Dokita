@@ -9,52 +9,48 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/icon_main"
+        android:icon="@drawable/icon_client"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/icon_main"
+        android:roundIcon="@drawable/icon_client"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".OpeningAcvtivity"
+            android:name=".activities.OpeningAcvtivity"
             android:launchMode="singleTop"
             android:theme="@style/MyTheme2" />
         <activity
-            android:name=".GetDataActivity"
-            android:parentActivityName=".OpeningAcvtivity" />
+            android:name=".activities.GetDataActivity"
+            android:parentActivityName=".activities.OpeningAcvtivity" />
         <activity
-            android:name=".SignedMainActivity"
-            android:parentActivityName=".ProfileActivity" />
+            android:name=".activities.SignedMainActivity"
+            android:parentActivityName=".activities.ProfileActivity" />
         <activity
-            android:name=".BodyMeasurementActivity"
-            android:parentActivityName=".SignedMainActivity" />
+            android:name=".activities.BodyMeasurementActivity"
+            android:parentActivityName=".activities.SignedMainActivity" />
         <activity
-            android:name=".HealthRecordsActivity"
-            android:parentActivityName=".SignedMainActivity" />
+            android:name=".activities.HealthRecordsActivity"
+            android:parentActivityName=".activities.SignedMainActivity" />
         <activity
-            android:name=".VitalsActivity"
-            android:parentActivityName=".SignedMainActivity" />
+            android:name=".activities.VitalsActivity"
+            android:parentActivityName=".activities.SignedMainActivity" />
         <activity
-            android:name=".ResultsActivity"
-            android:parentActivityName=".SignedMainActivity" />
+            android:name=".activities.ResultsActivity"
+            android:parentActivityName=".activities.SignedMainActivity" />
         <activity
-            android:name=".OrderActivity"
-            android:parentActivityName=".SearchActivity" />
+            android:name=".activities.OrderActivity"
+            android:parentActivityName=".activities.SearchActivity" />
         <activity
-            android:name=".SearchActivity"
+            android:name=".activities.SearchActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".OpeningAcvtivity" />
+            android:parentActivityName=".activities.OpeningAcvtivity" />
         <activity
-            android:name=".QuestionActivity"
-            android:parentActivityName=".OpeningAcvtivity" />
+            android:name=".activities.QuestionActivity"
+            android:parentActivityName=".activities.OpeningAcvtivity" />
         <activity
-            android:name=".WelcomeBackActivity"
+            android:name=".activities.WelcomeBackActivity"
             android:noHistory="true"
             android:theme="@style/AppTheme.WelcomeBack">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <provider
@@ -67,12 +63,32 @@
             android:resource="@array/preloaded_fonts" />
 
         <activity
-            android:name=".ProfileActivity"
-            android:parentActivityName=".OpeningAcvtivity" />
+            android:name=".activities.ProfileActivity"
+            android:parentActivityName=".activities.OpeningAcvtivity" />
+        <activity android:name=".activities.QuestionListActivity" />
+        <activity
+            android:name=".activities.LoginActivity"
+            android:theme="@style/MyTheme2" />
 
-        <activity android:name=".QuestionListActivity"></activity>
+        <service android:name=".services.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".services.MyFirebaseInstanceIdService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
 
-        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".activities.FirstActivity"
+            android:theme="@style/MyTheme2">
+            <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
     </application>
 
 </manifest>

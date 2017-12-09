@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="5dp"
-    tools:context="com.upload.adeogo.dokita.QuestionActivity">
+    tools:context="com.upload.adeogo.dokita.activities.QuestionActivity">
+
 
     <LinearLayout
         android:layout_width="match_parent"
