@@ -6,17 +6,28 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -35,30 +46,27 @@ import com.upload.adeogo.dokita.models.Favorite;
 import java.util.ArrayList;
 import java.util.List;
 
+import dmax.dialog.SpotsDialog;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class ProfileActivity extends AppCompatActivity implements BookingsAdapter.BookingsAdapterOnclickHandler, FavoriteAdapter.FavoriteAdapterOnclickHandler {
-    private static final String TAG = "ProfileActivity" ;
+    private static final String TAG = "ProfileActivity";
     final boolean[] check = {false, false};
 
-    private TextView mCheckDataTextView;
-    private TextView mCheckFavoriteDataTextView;
+    private ScrollView mProfileScrollView;
+    private TextView mCheckDataTextView, mCheckFavoriteDataTextView;
 
-    private RecyclerView mBookingsRecyclerView;
-    private RecyclerView mFavoriteRecyclerView;
+    private RecyclerView mBookingsRecyclerView, mFavoriteRecyclerView;
 
     private FavoriteAdapter mFavoriteAdapter;
     private BookingsAdapter mBookingsAdapter;
 
-    private LinearLayoutManager mFavoriteManager;
-    private LinearLayoutManager mBookingsManager;
+    private LinearLayoutManager mFavoriteManager, mBookingsManager;
 
     private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mDatabaseReference;
-    private DatabaseReference mFavoriteDatabaseReference;
-    private ChildEventListener mChildEventListener;
-    private ChildEventListener mFavoriteChildEventListener;
+    private DatabaseReference mDeleteDatabaseReference, mFavoriteDatabaseReference, mDatabaseReference, mFormerDatabaseReference;
+    private ChildEventListener mChildEventListener, mFavoriteChildEventListener, mFormerChildEventListener;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
@@ -70,18 +78,11 @@ public class ProfileActivity extends AppCompatActivity implements BookingsAdapte
     private Appointment mPickedAppointment;
 
     public static final int RC_SIGN_IN = 1;
-    private String mUsername;
-    private String userId;
+    private String mUsername, userId, mEmail, mPassword;
 
-    private LinearLayout mBodyMeasurementsLinearLayout;
-    private LinearLayout mResultsLinearLayout;
-    private LinearLayout mVitalsLinearLayout;
-    private LinearLayout mHealthRecordsLinearLayout;
+    private LinearLayout mBodyMeasurementsLinearLayout, mResultsLinearLayout, mVitalsLinearLayout, mHealthRecordsLinearLayout;
 
-    private TextView mBodyTextView;
-    private TextView mResultsTextView;
-    private TextView mVitalsTextView;
-    private TextView mHealthRecordsTextView;
+    private TextView mBodyTextView, mResultsTextView, mVitalsTextView, mHealthRecordsTextView;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -99,6 +100,7 @@ public class ProfileActivity extends AppCompatActivity implements BookingsAdapte
         setContentView(R.layout.activity_profile);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        mProfileScrollView = findViewById(R.id.scrollViewProfile);
         mBookingsRecyclerView = findViewById(R.id.bookings_rv);
         mFavoriteRecyclerView = findViewById(R.id.favourites_rv);
         mCheckDataTextView = findViewById(R.id.no_appointment_tv);
@@ -175,8 +177,13 @@ public class ProfileActivity extends AppCompatActivity implements BookingsAdapte
                 if (user != null) {
                     // User is signed in
                     userId = user.getUid();
-                    mDatabaseReference = mFirebaseDatabase.getReference().child("users/" +userId + "/appointments");
-                    mFavoriteDatabaseReference = mFirebaseDatabase.getReference().child("users/" +userId + "/favorites");
+                    mDatabaseReference = mFirebaseDatabase.getReference().child("users/" + userId + "/appointments");
+                    mFavoriteDatabaseReference = mFirebaseDatabase.getReference().child("users/" + userId + "/favorites");
+
+                    mDeleteDatabaseReference = mFirebaseDatabase.getReference().child("deleted").child("users").child(userId);
+
+                    mFormerDatabaseReference = mFirebaseDatabase.getReference().child("users").child(userId);
+
                     onSignedInInitialize(user.getDisplayName());
                 } else {
                     // User is signed out
@@ -184,12 +191,12 @@ public class ProfileActivity extends AppCompatActivity implements BookingsAdapte
                     startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
                 }
 
-                if (check[0] == false){
+                if (check[0] == false) {
                     mCheckDataTextView.setVisibility(View.VISIBLE);
-                }else mCheckDataTextView.setVisibility(View.GONE);
-                if (check[1] == false){
+                } else mCheckDataTextView.setVisibility(View.GONE);
+                if (check[1] == false) {
                     mCheckFavoriteDataTextView.setVisibility(View.VISIBLE);
-                }else mCheckFavoriteDataTextView.setVisibility(View.GONE);
+                } else mCheckFavoriteDataTextView.setVisibility(View.GONE);
             }
         };
 
@@ -212,28 +219,35 @@ public class ProfileActivity extends AppCompatActivity implements BookingsAdapte
     }
 
     private void attachDatabaseReadListener() {
+
         if (mChildEventListener == null) {
             mChildEventListener = new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     check[0] = true;
 
-                    if (check[0] == false){
+                    if (check[0] == false) {
                         mCheckDataTextView.setVisibility(View.VISIBLE);
-                    }else mCheckDataTextView.setVisibility(View.GONE);
+                    } else mCheckDataTextView.setVisibility(View.GONE);
 
                     Appointment appointment = dataSnapshot.getValue(Appointment.class);
                     mAppointmentList.add(appointment);
                     mBookingsAdapter.swapData(mAppointmentList);
                 }
 
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                }
+
                 public void onChildRemoved(DataSnapshot dataSnapshot) {
                     mAppointmentList.remove(dataSnapshot.getValue(Appointment.class));
                     mBookingsAdapter.swapData(mAppointmentList);
                 }
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-                public void onCancelled(DatabaseError databaseError) {}
+
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                }
+
+                public void onCancelled(DatabaseError databaseError) {
+                }
             };
 
             mDatabaseReference.addChildEventListener(mChildEventListener);
@@ -245,23 +259,56 @@ public class ProfileActivity extends AppCompatActivity implements BookingsAdapte
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     check[1] = true;
 
-                    if (check[1] == false){
+                    if (check[1] == false) {
                         mCheckFavoriteDataTextView.setVisibility(View.VISIBLE);
-                    }else mCheckFavoriteDataTextView.setVisibility(View.GONE);
+                    } else mCheckFavoriteDataTextView.setVisibility(View.GONE);
 
                     Favorite favorite = dataSnapshot.getValue(Favorite.class);
                     mFavoriteList.add(favorite);
                     mFavoriteAdapter.swapData(mFavoriteList);
                 }
 
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                }
+
                 public void onChildRemoved(DataSnapshot dataSnapshot) {
                 }
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-                public void onCancelled(DatabaseError databaseError) {}
+
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                }
+
+                public void onCancelled(DatabaseError databaseError) {
+                }
             };
 
             mFavoriteDatabaseReference.addChildEventListener(mFavoriteChildEventListener);
+        }
+
+        if (mFormerChildEventListener == null) {
+            mFormerChildEventListener = new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    if (TextUtils.equals(dataSnapshot.getKey(), "email")) {
+                        mEmail = dataSnapshot.getValue(String.class);
+                    }
+                    if (TextUtils.equals(dataSnapshot.getKey(), "password")) {
+                        mPassword = dataSnapshot.getValue().toString();
+                    }
+                }
+
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                }
+
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+                }
+
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                }
+
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            };
+            mFormerDatabaseReference.addChildEventListener(mFormerChildEventListener);
         }
     }
 
@@ -319,7 +366,7 @@ public class ProfileActivity extends AppCompatActivity implements BookingsAdapte
         setDialog();
     }
 
-    private void setDialog(){
+    private void setDialog() {
         AlertDialog.Builder builder;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
@@ -334,7 +381,7 @@ public class ProfileActivity extends AppCompatActivity implements BookingsAdapte
                         appointmentQuery.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                for (DataSnapshot appointmentSnapshot: dataSnapshot.getChildren()) {
+                                for (DataSnapshot appointmentSnapshot : dataSnapshot.getChildren()) {
                                     appointmentSnapshot.getRef().removeValue();
                                     finish();
                                     startActivity(getIntent());
@@ -345,7 +392,8 @@ public class ProfileActivity extends AppCompatActivity implements BookingsAdapte
                             public void onCancelled(DatabaseError databaseError) {
                                 Log.e(TAG, "onCancelled", databaseError.toException());
                             }
-                        });}
+                        });
+                    }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -354,6 +402,111 @@ public class ProfileActivity extends AppCompatActivity implements BookingsAdapte
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == R.id.action_support){
+            Intent intent = new Intent(ProfileActivity.this, SupportActivity.class);
+            startActivity(intent);
+        }
+
+        if (id == R.id.action_logout) {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(ProfileActivity.this);
+            alertDialog.setTitle("LOGOUT");
+            alertDialog.setMessage("Want to Logout?");
+            alertDialog.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(ProfileActivity.this);
+                alertDialog.setTitle("DELETE ACCOUNT");
+                alertDialog.setMessage("Every reference to this account will be deleted!");
+
+                alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+
+                alertDialog.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        final android.app.AlertDialog waitingDialog = new SpotsDialog(ProfileActivity.this);
+                        waitingDialog.show();
+
+                        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                        ref.child("users").child(userId).removeValue();
+
+                        AuthCredential credential = EmailAuthProvider
+                                .getCredential(mEmail, mPassword);
+
+                        mDeleteDatabaseReference.push().setValue(userId);
+                        // Prompt the user to re-provide their sign-in credentials
+                        user.reauthenticate(credential)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    user.delete()
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+
+                                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                                                ref.child("new_doctors").child(userId).removeValue();
+
+                                                if (task.isSuccessful()) {
+                                                    waitingDialog.dismiss();
+                                                    Snackbar.make(mProfileScrollView, "Account deleted!", Snackbar.LENGTH_LONG);
+                                                    mFirebaseAuth.signOut();
+                                                    Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+                                                    startActivity(intent);
+                                                }
+                                            }
+                                        });
+
+                                }
+                            });
+                    }
+                });
+                alertDialog.show();
+                }
+            });
+
+            alertDialog.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+
+            alertDialog.setNegativeButton("Logout", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    mFirebaseAuth.signOut();
+                    Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                }
+            });
+
+            alertDialog.show();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 }

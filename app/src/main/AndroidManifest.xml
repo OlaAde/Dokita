@@ -17,7 +17,13 @@
         <activity
             android:name=".activities.OpeningAcvtivity"
             android:launchMode="singleTop"
-            android:theme="@style/MyTheme2" />
+            android:theme="@style/MyTheme2">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activities.GetDataActivity"
             android:parentActivityName=".activities.OpeningAcvtivity" />
@@ -49,9 +55,7 @@
         <activity
             android:name=".activities.WelcomeBackActivity"
             android:noHistory="true"
-            android:theme="@style/AppTheme.WelcomeBack">
-
-        </activity>
+            android:theme="@style/AppTheme.WelcomeBack"></activity>
 
         <provider
             android:name=".data.DokitariProvider"
@@ -81,14 +85,11 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".activities.FirstActivity"
-            android:theme="@style/MyTheme2">
-            <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-        </activity>
+        <activity
+            android:name=".activities.FirstActivity"
+            android:theme="@style/MyTheme2"></activity>
+        <activity android:name=".activities.SupportActivity"
+            android:parentActivityName=".activities.ProfileActivity"></activity>
     </application>
 
 </manifest>
