@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.upload.adeogo.dokita.R;
 import com.upload.adeogo.dokita.adapters.TimeAdapter;
 import com.upload.adeogo.dokita.models.Appointment;
@@ -24,6 +25,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
+import com.upload.adeogo.dokita.models.Notification;
 import com.upload.adeogo.dokita.models.Time;
 
 import java.util.ArrayList;
@@ -206,6 +208,17 @@ public class OrderActivity extends AppCompatActivity implements TimeAdapter.Time
         mDatabaseReference.push().setValue(new Appointment(userId, doctor_id, mTimeInt, 0, 0, mYear, mMonth, mDay, mDoctorNumber, mDoctorName, mClientName, "The General Hospital"));
         mSelfDatabaseReference.push().setValue(new Appointment(userId,doctor_id, mTimeInt, 0, 0, mYear, mMonth, mDay, mDoctorNumber, mDoctorName, mClientName, "The General Hospital"));
         mPhoneNumber.trim();
+
+        Notification notification = new Notification();
+        notification.setText(mUsername + " has booked a appointment with you");
+        notification.setTopic(doctor_id);
+        notification.setUid(userId);
+        notification.setUsername(mUsername);
+
+        FirebaseDatabase.getInstance().getReference(doctor_id).push().setValue(notification);
+
+        FirebaseMessaging.getInstance().subscribeToTopic(userId);
+
         Toast.makeText(this, "Appointment Request Sent!", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(OrderActivity.this, ProfileActivity.class);
         startActivity(intent);
