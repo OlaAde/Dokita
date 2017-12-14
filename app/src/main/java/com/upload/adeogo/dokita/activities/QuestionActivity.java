@@ -178,6 +178,7 @@ public class QuestionActivity extends AppCompatActivity {
                     notification.setTopic( mDoctorId);
                     notification.setUid(userId);
                     notification.setUsername(mUsername);
+                    notification.setType("0");
 
                     FirebaseDatabase.getInstance().getReference(mDoctorId).push().setValue(notification);
 

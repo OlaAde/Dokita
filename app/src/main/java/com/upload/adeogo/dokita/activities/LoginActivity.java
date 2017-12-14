@@ -170,114 +170,116 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void showRegisterDialog() {
-        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-        final android.app.AlertDialog waitingDialog = new SpotsDialog(LoginActivity.this);
-        alertDialog.setTitle("REGISTER");
-        alertDialog.setMessage("Please use email to register");
-
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View register_layout = inflater.inflate(R.layout.layout_register, null);
-
-        final MaterialEditText edtEmail = register_layout.findViewById(R.id.edtEmail);
-        final MaterialEditText edtPassword = register_layout.findViewById(R.id.edtPassword);
-        final MaterialEditText edtName = register_layout.findViewById(R.id.edtName);
-        final MaterialEditText edtPhone = register_layout.findViewById(R.id.edtPhone);
-
-        alertDialog.setView(register_layout);
-
-        alertDialog.setPositiveButton("REGISTER", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(final DialogInterface dialogInterface, int i) {
-
-                waitingDialog.show();
-                if (TextUtils.isEmpty(edtEmail.getText().toString())){
-                    Snackbar.make(mRelativeLayout, "Please enter email address", Snackbar.LENGTH_SHORT)
-                            .show();
-                    return;
-                }
-
-                if (TextUtils.isEmpty(edtName.getText().toString())){
-                    Snackbar.make(mRelativeLayout, "Please enter phone number", Snackbar.LENGTH_SHORT)
-                            .show();
-                    return;
-                }
-
-                if (TextUtils.isEmpty(edtPassword.getText().toString())){
-                    Snackbar.make(mRelativeLayout, "Please enter password", Snackbar.LENGTH_SHORT)
-                            .show();
-                    return;
-                }
-
-                if (edtPassword.getText().toString().length()< 6){
-                    Snackbar.make(mRelativeLayout, "Password too short !!!", Snackbar.LENGTH_SHORT)
-                            .show();
-                    return;
-                }
-
-                if (TextUtils.isEmpty(edtPhone.getText().toString())){
-                    Snackbar.make(mRelativeLayout, "Please enter email address", Snackbar.LENGTH_SHORT)
-                            .show();
-                    return;
-                }
-
-                //Register new user
-                mFirebaseAuth.createUserWithEmailAndPassword(edtEmail.getText().toString(), edtPassword.getText().toString())
-                        .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                            @Override
-                            public void onSuccess(AuthResult authResult) {
-                                User user = new User();
-                                user.setEmail(edtEmail.getText().toString());
-                                user.setPassword(edtPassword.getText().toString());
-                                user.setName(edtName.getText().toString());
-                                user.setPhone(edtPhone.getText().toString());
-
-                                mDatabaseReference.child(mFirebaseAuth.getCurrentUser().getUid()).setValue(user)
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-
-                                                FirebaseUser user = mFirebaseAuth.getCurrentUser();
-                                                if(user!=null) {
-                                                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                                            .setDisplayName(edtName.getText().toString()).build();
-                                                    user.updateProfile(profileUpdates);
-                                                }
-                                                Snackbar.make(mRelativeLayout, "Registered successfully !!!", Snackbar.LENGTH_SHORT)
-                                                        .show();
-                                                Intent intent = new Intent(LoginActivity.this, OpeningAcvtivity.class);
-                                                startActivity(intent);
-                                                waitingDialog.dismiss();
-                                                finish();
-                                            }
-                                        })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Snackbar.make(mRelativeLayout, "Failed " + e.getMessage(), Snackbar.LENGTH_SHORT)
-                                                .show();
-                                        dialogInterface.dismiss();
-                                    }
-                                });
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Snackbar.make(mRelativeLayout, "Failed " + e.getMessage(), Snackbar.LENGTH_SHORT)
-                                .show();
-                        dialogInterface.dismiss();
-                    }
-                });
-            }
-        });
-
-        alertDialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-            }
-        });
-
-        alertDialog.show();
+//        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+//        final android.app.AlertDialog waitingDialog = new SpotsDialog(LoginActivity.this);
+//        alertDialog.setTitle("REGISTER");
+//        alertDialog.setMessage("Please use email to register");
+//
+//        LayoutInflater inflater = LayoutInflater.from(this);
+//        View register_layout = inflater.inflate(R.layout.layout_register, null);
+//
+//        final MaterialEditText edtEmail = register_layout.findViewById(R.id.edtEmail);
+//        final MaterialEditText edtPassword = register_layout.findViewById(R.id.edtPassword);
+//        final MaterialEditText edtName = register_layout.findViewById(R.id.edtName);
+//        final MaterialEditText edtPhone = register_layout.findViewById(R.id.edtPhone);
+//
+//        alertDialog.setView(register_layout);
+//
+//        alertDialog.setPositiveButton("REGISTER", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(final DialogInterface dialogInterface, int i) {
+//
+//                waitingDialog.show();
+//                if (TextUtils.isEmpty(edtEmail.getText().toString())){
+//                    Snackbar.make(mRelativeLayout, "Please enter email address", Snackbar.LENGTH_SHORT)
+//                            .show();
+//                    return;
+//                }
+//
+//                if (TextUtils.isEmpty(edtName.getText().toString())){
+//                    Snackbar.make(mRelativeLayout, "Please enter phone number", Snackbar.LENGTH_SHORT)
+//                            .show();
+//                    return;
+//                }
+//
+//                if (TextUtils.isEmpty(edtPassword.getText().toString())){
+//                    Snackbar.make(mRelativeLayout, "Please enter password", Snackbar.LENGTH_SHORT)
+//                            .show();
+//                    return;
+//                }
+//
+//                if (edtPassword.getText().toString().length()< 6){
+//                    Snackbar.make(mRelativeLayout, "Password too short !!!", Snackbar.LENGTH_SHORT)
+//                            .show();
+//                    return;
+//                }
+//
+//                if (TextUtils.isEmpty(edtPhone.getText().toString())){
+//                    Snackbar.make(mRelativeLayout, "Please enter email address", Snackbar.LENGTH_SHORT)
+//                            .show();
+//                    return;
+//                }
+//
+//                //Register new user
+//                mFirebaseAuth.createUserWithEmailAndPassword(edtEmail.getText().toString(), edtPassword.getText().toString())
+//                        .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+//                            @Override
+//                            public void onSuccess(AuthResult authResult) {
+//                                User user = new User();
+//                                user.setEmail(edtEmail.getText().toString());
+//                                user.setPassword(edtPassword.getText().toString());
+//                                user.setName(edtName.getText().toString());
+//                                user.setPhone(edtPhone.getText().toString());
+//
+//                                mDatabaseReference.child(mFirebaseAuth.getCurrentUser().getUid()).setValue(user)
+//                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                            @Override
+//                                            public void onSuccess(Void aVoid) {
+//
+//                                                FirebaseUser user = mFirebaseAuth.getCurrentUser();
+//                                                if(user!=null) {
+//                                                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+//                                                            .setDisplayName(edtName.getText().toString()).build();
+//                                                    user.updateProfile(profileUpdates);
+//                                                }
+//                                                Snackbar.make(mRelativeLayout, "Registered successfully !!!", Snackbar.LENGTH_SHORT)
+//                                                        .show();
+//                                                Intent intent = new Intent(LoginActivity.this, OpeningAcvtivity.class);
+//                                                startActivity(intent);
+//                                                waitingDialog.dismiss();
+//                                                finish();
+//                                            }
+//                                        })
+//                                .addOnFailureListener(new OnFailureListener() {
+//                                    @Override
+//                                    public void onFailure(@NonNull Exception e) {
+//                                        Snackbar.make(mRelativeLayout, "Failed " + e.getMessage(), Snackbar.LENGTH_SHORT)
+//                                                .show();
+//                                        dialogInterface.dismiss();
+//                                    }
+//                                });
+//                            }
+//                        }).addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Snackbar.make(mRelativeLayout, "Failed " + e.getMessage(), Snackbar.LENGTH_SHORT)
+//                                .show();
+//                        dialogInterface.dismiss();
+//                    }
+//                });
+//            }
+//        });
+//
+//        alertDialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                    dialogInterface.dismiss();
+//            }
+//        });
+//
+//        alertDialog.show();
+        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+        startActivity(intent);
      }
 
     private void showDialogForgetPwd() {

@@ -69,7 +69,7 @@ public class GetDataActivity extends AppCompatActivity implements ListaAdapter.L
         Intent intent = getIntent();
         mSetterInt = intent.getIntExtra("int_setter", 0);
 
-        mSearchView.setQueryHint("Search Doctors");
+        mSearchView.setQueryHint("Search!");
         setfakeData();
         mRecyclerView.setLayoutManager(mManager);
         mRecyclerView.setAdapter(mAdapter);
@@ -112,6 +112,8 @@ public class GetDataActivity extends AppCompatActivity implements ListaAdapter.L
 
         if (mSetterInt == 0 ){
             mSpecitlityList = new ArrayList<>();
+            mSpecitlityList.add("Nurse");
+            mSpecitlityList.add("Gen Health Professional");
             mSpecitlityList.add("Paediatrician");
             mSpecitlityList.add("Dentist");
             mSpecitlityList.add("Ophthalmologist");

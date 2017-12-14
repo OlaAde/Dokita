@@ -5,20 +5,22 @@ package com.upload.adeogo.dokita.models;
  */
 
 public class Notification {
-    private String username;
-    private String imageUrl;
-    private String email;
-    private String uid;
-    private String text;
-    private String topic;
+    private String username, imageUrl, email, uid, text, topic, type;
+
 
     public Notification(){}
 
-    public Notification(String username,String uid, String text, String topic){
+    public Notification(String username,String uid, String text, String topic, String typee){
         this.username = username;
         this.uid = uid;
         this.text = text;
         this.topic = topic;
+        this.type = type;
+    }
+
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public void setEmail(String email) {
@@ -53,6 +55,10 @@ public class Notification {
         return imageUrl;
     }
 
+    public String getType() {
+        return type;
+    }
+
     public String getText() {
         return text;
     }
@@ -68,4 +74,5 @@ public class Notification {
     public String getUsername() {
         return username;
     }
+
 }

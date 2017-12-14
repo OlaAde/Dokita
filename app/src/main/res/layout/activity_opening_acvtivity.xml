@@ -50,7 +50,7 @@
             android:singleLine="true"
             android:background="@drawable/rounded_edittext"
             android:textColorHint="#b2000000"
-            android:hint="Chose Doctor Name"
+            android:hint="Chose Name"
             android:textSize="16sp"
             android:id="@+id/name_tv"
             android:layout_alignParentLeft="true"

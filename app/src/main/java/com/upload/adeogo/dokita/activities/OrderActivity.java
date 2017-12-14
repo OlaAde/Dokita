@@ -1,16 +1,20 @@
 package com.upload.adeogo.dokita.activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,21 +55,13 @@ public class OrderActivity extends AppCompatActivity implements TimeAdapter.Time
 
     private DatePickerTimeline timeline;
     private int timeSetter;
-    private String mDoctorName;
-    private String mDoctorSpecialist;
-    private String mPictureUrl;
-    private String mDoctorNumber;
-    private String mClientName;
-
-    private String mDateText;
-    private String mTimeInt = null;
 
     private int mYear;
     private int mMonth;
     private int mDay;
-    private String Description;
 
-    private String mOrderTxt;
+    private String mOrderTxt, mDescription, mClientName, mDoctorNumber, mPictureUrl, mDoctorSpecialist, mDoctorName, mDateText, mTimeInt = null,
+             userId, doctor_id, mUsername, mPhoneNumber, mMessage;
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
@@ -77,10 +73,7 @@ public class OrderActivity extends AppCompatActivity implements TimeAdapter.Time
     public static final String ANONYMOUS = "anonymous";
 
     public static final int RC_SIGN_IN = 1;
-    private String mUsername;
-    private String userId;
-    private String doctor_id;
-    private String mPhoneNumber;
+
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -205,23 +198,60 @@ public class OrderActivity extends AppCompatActivity implements TimeAdapter.Time
 
 
     private void sendAppointment(){
-        mDatabaseReference.push().setValue(new Appointment(userId, doctor_id, mTimeInt, 0, 0, mYear, mMonth, mDay, mDoctorNumber, mDoctorName, mClientName, "The General Hospital"));
-        mSelfDatabaseReference.push().setValue(new Appointment(userId,doctor_id, mTimeInt, 0, 0, mYear, mMonth, mDay, mDoctorNumber, mDoctorName, mClientName, "The General Hospital"));
-        mPhoneNumber.trim();
 
-        Notification notification = new Notification();
-        notification.setText(mUsername + " has booked a appointment with you");
-        notification.setTopic(doctor_id);
-        notification.setUid(userId);
-        notification.setUsername(mUsername);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Message to doctor");
 
-        FirebaseDatabase.getInstance().getReference(doctor_id).push().setValue(notification);
+// Set up the input
+        final EditText input = new EditText(this);
+// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE | InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
 
-        FirebaseMessaging.getInstance().subscribeToTopic(userId);
+// Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mMessage = input.getText().toString();
 
-        Toast.makeText(this, "Appointment Request Sent!", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(OrderActivity.this, ProfileActivity.class);
-        startActivity(intent);
+
+
+                if (mMessage.length() > 25){
+                    mPhoneNumber.trim();
+
+                    mDatabaseReference.push().setValue(new Appointment(userId, doctor_id, mTimeInt, mYear, mMonth, mDay, mDoctorNumber, "", mDoctorName, mClientName, "The General Hospital", 0, mMessage));
+                    mSelfDatabaseReference.push().setValue(new Appointment(userId,doctor_id, mTimeInt, mYear, mMonth, mDay, mDoctorNumber,"", mDoctorName, mClientName, "The General Hospital", 0, mMessage));
+
+                    Notification notification = new Notification();
+                    notification.setText(mUsername + " has booked a appointment with you");
+                    notification.setTopic(doctor_id);
+                    notification.setUid(userId);
+                    notification.setUsername(mUsername);
+                    notification.setType("1");
+
+                    FirebaseDatabase.getInstance().getReference(doctor_id).push().setValue(notification);
+
+                    FirebaseMessaging.getInstance().subscribeToTopic(userId);
+
+                    Toast.makeText(OrderActivity.this, "Appointment Request Sent!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(OrderActivity.this, ProfileActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(OrderActivity.this, "Please enter more details", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+
+
     }
 
     private void onSignedInInitialize(String username) {
@@ -309,8 +339,6 @@ public class OrderActivity extends AppCompatActivity implements TimeAdapter.Time
             intent.putExtra("doctor_name", mDoctorName);
             intent.putExtra("doctor_id", doctor_id);
 
-            intent.putExtra("doctor_id", doctor_id);
-            intent.putExtra("doctor_id", doctor_id);
             startActivity(intent);
             return true;
         }

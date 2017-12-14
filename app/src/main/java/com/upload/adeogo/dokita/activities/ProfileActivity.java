@@ -162,6 +162,7 @@ public class ProfileActivity extends AppCompatActivity implements BookingsAdapte
         mBookingsManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mFavoriteManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
+
         mFavoriteRecyclerView.setLayoutManager(mFavoriteManager);
         mBookingsRecyclerView.setLayoutManager(mBookingsManager);
 
@@ -233,6 +234,7 @@ public class ProfileActivity extends AppCompatActivity implements BookingsAdapte
                     Appointment appointment = dataSnapshot.getValue(Appointment.class);
                     mAppointmentList.add(appointment);
                     mBookingsAdapter.swapData(mAppointmentList);
+                    mBookingsManager.scrollToPosition(mAppointmentList.size() - 1);
                 }
 
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
@@ -266,6 +268,8 @@ public class ProfileActivity extends AppCompatActivity implements BookingsAdapte
                     Favorite favorite = dataSnapshot.getValue(Favorite.class);
                     mFavoriteList.add(favorite);
                     mFavoriteAdapter.swapData(mFavoriteList);
+                    mFavoriteManager.scrollToPosition(mFavoriteList.size() - 1);
+
                 }
 
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {

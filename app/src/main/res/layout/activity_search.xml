@@ -7,19 +7,21 @@
     android:orientation="vertical"
     tools:context="com.upload.adeogo.dokita.activities.SearchActivity">
 
-    <android.support.v7.widget.RecyclerView
+
+
+        <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:text="No professional matches your search"
+        android:gravity="center"
+        android:id="@+id/no_result_search"
+        android:textSize="15sp"/>
+
+        <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/search_rv">
 
-    </android.support.v7.widget.RecyclerView>
-
-    <TextView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="No Internet Connection!"
-    android:gravity="center"
-    android:textStyle="bold"
-    android:id="@+id/no_internet_search"
-    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"/>
+</android.support.v7.widget.RecyclerView>
 </LinearLayout>

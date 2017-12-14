@@ -55,7 +55,7 @@
         <activity
             android:name=".activities.WelcomeBackActivity"
             android:noHistory="true"
-            android:theme="@style/AppTheme.WelcomeBack"></activity>
+            android:theme="@style/AppTheme.WelcomeBack" />
 
         <provider
             android:name=".data.DokitariProvider"
@@ -87,9 +87,15 @@
 
         <activity
             android:name=".activities.FirstActivity"
-            android:theme="@style/MyTheme2"></activity>
-        <activity android:name=".activities.SupportActivity"
-            android:parentActivityName=".activities.ProfileActivity"></activity>
+            android:theme="@style/MyTheme2" />
+        <activity
+            android:name=".activities.SupportActivity"
+            android:parentActivityName=".activities.ProfileActivity" />
+        <activity android:name=".activities.RegisterActivity"
+            android:parentActivityName=".activities.LoginActivity">
+
+        </activity>
+
     </application>
 
 </manifest>

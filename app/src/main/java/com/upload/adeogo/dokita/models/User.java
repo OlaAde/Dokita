@@ -5,15 +5,20 @@ package com.upload.adeogo.dokita.models;
  */
 
 public class User {
-    private String email, password, name, phone;
+    private String email, password, name, phone, photoUrl;
 
     public User(){}
 
-    public User(String email, String password, String name, String phone) {
+    public User(String email, String password, String name, String phone, String photoUrl) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.phone = phone;
+        this.photoUrl = photoUrl;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
     }
 
     public String getEmail() {
@@ -46,5 +51,9 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 }

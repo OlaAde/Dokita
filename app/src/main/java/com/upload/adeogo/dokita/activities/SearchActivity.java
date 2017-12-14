@@ -46,7 +46,7 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.S
     private String queryCity;
     private String querySpeciality;
 
-    private TextView mNoInternetTextView;
+    private TextView mNoDataTextView;
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDoctorsReference;
@@ -69,11 +69,10 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.S
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Search Result");
         mRecyclerView = (RecyclerView) findViewById(R.id.search_rv);
-        mNoInternetTextView = (TextView) findViewById(R.id.no_internet_search);
+        mNoDataTextView = (TextView) findViewById(R.id.no_result_search);
 
         boolean isConnect = NetworkUtils.isOnline(this);
-        if (!isConnect)
-            mNoInternetTextView.setVisibility(View.VISIBLE);
+
         //firebase
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDoctorsReference = mFirebaseDatabase.getReference().child("new_doctors/all_profiles");
@@ -133,6 +132,9 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.S
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot appointmentSnapshot: dataSnapshot.getChildren()) {
+
+                    mNoDataTextView.setVisibility(View.GONE);
+
                     DoctorProfile doctor = appointmentSnapshot.getValue(DoctorProfile.class);
                     mDoctorList.add(doctor);
                     mAdapter.swapData(null);

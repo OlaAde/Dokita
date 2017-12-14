@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/registerScrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.upload.adeogo.dokita.activities.RegisterActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="20dp">
+
+        <FrameLayout
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <com.jackandphantom.circularprogressbar.CircleProgressbar
+                android:id="@+id/progressBarImageView"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+
+
+                app:cpb_progress="0"
+                app:cpb_roundedCorner="true"
+                app:cpb_foregroundProgressWidth="15"
+                app:cpb_foregroundProgressColor="#1864c2"
+                app:cpb_touchEnabled="true"/>
+
+            <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_gravity="center"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/ic_photo_foreground"
+            android:id="@+id/registerProfileImageView"/>
+
+
+
+
+        </FrameLayout>
+
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/edtEmail"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+
+            app:met_floatingLabel="highlight"
+            app:met_baseColor="@color/colorPrimary"
+            app:met_singleLineEllipsis="true"
+            app:met_primaryColor="@color/colorPrimary"/>
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/edtPassword"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+
+            app:met_floatingLabel="highlight"
+            app:met_baseColor="@color/colorPrimary"
+            app:met_singleLineEllipsis="true"
+            app:met_primaryColor="@color/colorPrimary"/>
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/edtName"
+            android:hint="Name"
+            android:inputType="textCapWords"
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+
+            app:met_floatingLabel="highlight"
+            app:met_baseColor="@color/colorPrimary"
+            app:met_singleLineEllipsis="true"
+            app:met_primaryColor="@color/colorPrimary"/>
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/edtPhone"
+            android:hint="Phone"
+            android:inputType="phone"
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+
+            app:met_floatingLabel="highlight"
+            app:met_baseColor="@color/colorPrimary"
+            app:met_singleLineEllipsis="true"
+            app:met_primaryColor="@color/colorPrimary"/>
+
+    </LinearLayout>
+
+</ScrollView>
