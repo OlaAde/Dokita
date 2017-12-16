@@ -1,5 +1,7 @@
 package com.upload.adeogo.dokita.activities;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -31,10 +33,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 import com.upload.adeogo.dokita.models.Notification;
 import com.upload.adeogo.dokita.models.Time;
+import com.upload.adeogo.dokita.services.NotifyService;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -58,7 +62,7 @@ public class OrderActivity extends AppCompatActivity implements TimeAdapter.Time
 
     private int mYear;
     private int mMonth;
-    private int mDay;
+    private int mDay = -1;
 
     private String mOrderTxt, mDescription, mClientName, mDoctorNumber, mPictureUrl, mDoctorSpecialist, mDoctorName, mDateText, mTimeInt = null,
              userId, doctor_id, mUsername, mPhoneNumber, mMessage;
@@ -162,6 +166,7 @@ public class OrderActivity extends AppCompatActivity implements TimeAdapter.Time
                 mDateText = day + "/" + month + "/" + year;
                 if (day < thisDay){
                     Toast.makeText(OrderActivity.this, "Pick a day not in the past", Toast.LENGTH_SHORT).show();
+                    mDateText = null;
                 }else {
                     mDay = day;
                     mMonth = month;
@@ -178,7 +183,7 @@ public class OrderActivity extends AppCompatActivity implements TimeAdapter.Time
                     Toast.makeText(OrderActivity.this, "You forgot to pick a Time", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (mDateText == null){
+                if (mDateText == null || mDay == -1){
                     Toast.makeText(OrderActivity.this, "You forgot to pick a Date", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -298,6 +303,22 @@ public class OrderActivity extends AppCompatActivity implements TimeAdapter.Time
         mTimeInt = mTimeList.get(position).getTime();
         mTimeAdapter.swapData(mTimeList);
         Toast.makeText(this, mTimeInt, Toast.LENGTH_SHORT).show();
+    }
+
+    private void setAlarm(){
+
+        Intent myIntent = new Intent(this , NotifyService.class);
+        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+        PendingIntent pendingIntent = PendingIntent.getService(this, 0, myIntent, 0);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.AM_PM, Calendar.AM);
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000*60*60*24 , pendingIntent);
     }
 
     @Override

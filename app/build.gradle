@@ -59,6 +59,7 @@ dependencies {
     implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
     implementation 'com.github.d-max:spots-dialog:0.7@aar'
     implementation 'com.github.devlight.navigationtabstrip:navigationtabstrip:1.0.4'
+    implementation 'net.rimoto:intlphoneinput:1.0.1'
 
     testImplementation 'junit:junit:4.12'
 }

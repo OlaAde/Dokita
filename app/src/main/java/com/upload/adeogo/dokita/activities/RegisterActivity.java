@@ -8,11 +8,9 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
@@ -34,6 +32,8 @@ import com.squareup.picasso.Picasso;
 import com.upload.adeogo.dokita.R;
 import com.upload.adeogo.dokita.models.User;
 
+import net.rimoto.intlphoneinput.IntlPhoneInput;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import dmax.dialog.SpotsDialog;
 
@@ -46,11 +46,12 @@ public class RegisterActivity extends AppCompatActivity {
     private StorageReference mProfilePhotosStorageReference;
     private CircleProgressbar mProgressBar;
     private CircleImageView mImageView;
+    private IntlPhoneInput mPhoneInput;
 
-    private String mPhotoUrl;
+    private String mPhotoUrl, mPhoneNumber;
     private static final int RC_PHOTO_PICKER = 12;
 
-    private MaterialEditText edtEmail, edtPassword, edtName, edtPhone;
+    private MaterialEditText edtEmail, edtPassword, edtName;
     private android.app.AlertDialog waitingDialog;
 
     @Override
@@ -72,7 +73,8 @@ public class RegisterActivity extends AppCompatActivity {
         edtEmail = findViewById(R.id.edtEmail);
         edtPassword = findViewById(R.id.edtPassword);
         edtName = findViewById(R.id.edtName);
-        edtPhone = findViewById(R.id.edtPhone);
+        mPhoneInput = findViewById(R.id.phoneInput);
+
         mRegisterScrollView = findViewById(R.id.registerScrollView);
 
         mProfilePhotosStorageReference = FirebaseStorage.getInstance().getReference().child("clients").child("profile_photos");
@@ -179,11 +181,17 @@ public class RegisterActivity extends AppCompatActivity {
                 return false;
             }
 
-            if (TextUtils.isEmpty(edtPhone.getText().toString())) {
-                Snackbar.make(mRegisterScrollView, "Please enter email address", Snackbar.LENGTH_SHORT)
-                        .show();
+            mPhoneNumber = mPhoneInput.getNumber();
+
+            if (TextUtils.isEmpty(mPhoneNumber)){
+                Toast.makeText(RegisterActivity.this, "Please enter phone number", Toast.LENGTH_SHORT).show();
                 return false;
             }
+
+            if (!mPhoneInput.isValid()){
+                Toast.makeText(RegisterActivity.this, "Please enter a valid phone number", Toast.LENGTH_SHORT).show();
+            }
+
 
             waitingDialog.show();
             //Register new user
@@ -195,7 +203,7 @@ public class RegisterActivity extends AppCompatActivity {
                             user.setEmail(edtEmail.getText().toString());
                             user.setPassword(edtPassword.getText().toString());
                             user.setName(edtName.getText().toString());
-                            user.setPhone(edtPhone.getText().toString());
+                            user.setPhone(mPhoneNumber);
                             user.setPhotoUrl(mPhotoUrl);
 
                             mDatabaseReference.child(mFirebaseAuth.getCurrentUser().getUid()).setValue(user)
@@ -211,7 +219,7 @@ public class RegisterActivity extends AppCompatActivity {
                                         }
                                         Snackbar.make(mRegisterScrollView, "Registered successfully !!!", Snackbar.LENGTH_SHORT)
                                                 .show();
-                                        Intent intent = new Intent(RegisterActivity.this, OpeningAcvtivity.class);
+                                        Intent intent = new Intent(RegisterActivity.this, FirstActivity.class);
                                         startActivity(intent);
                                         waitingDialog.dismiss();
                                         finish();
