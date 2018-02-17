@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.upload.adeogo.dokita.activities.OpeningAcvtivity">
     android:background="@drawable/doctor"
+    tools:context="com.upload.adeogo.dokita.activities.OpeningAcvtivity">
 
 
     <ImageView
@@ -17,8 +17,8 @@
     <ImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_margin="10dp"
-        android:padding="3dp"
+        android:layout_margin="5dp"
+        android:padding="7dp"
         android:background="@drawable/roundedbutton2"
         app:srcCompat="@drawable/profile"
         android:layout_alignParentRight="true"
@@ -28,10 +28,10 @@
     <ImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_margin="10dp"
+        android:layout_margin="5dp"
         android:padding="3dp"
         android:background="@drawable/roundedbutton2"
-        app:srcCompat="@drawable/ic_help"
+        app:srcCompat="@drawable/ic_message"
         android:layout_below="@+id/profile"
         android:layout_alignParentRight="true"
         android:id="@+id/question_icon"/>
@@ -44,6 +44,7 @@
         android:id="@+id/name_rl"
         android:layout_above="@+id/speciality_rl">
         <EditText
+            android:fontFamily="@font/shree"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:gravity="center"
@@ -56,13 +57,21 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
 
+        <ImageView
+            android:paddingRight="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            app:srcCompat="@drawable/ic_clear_black_24px"
+            android:id="@+id/clearName"
+            android:layout_alignParentRight="true"/>
 
         <ImageView
+            android:paddingLeft="5dp"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             app:srcCompat="@drawable/profile_orange"
             android:id="@+id/name_iv"
-            android:layout_alignParentRight="true"/>
+            android:layout_alignParentLeft="true"/>
 
     </RelativeLayout>
 
@@ -75,6 +84,7 @@
         android:layout_above="@+id/city_rl">
         <TextView
             android:layout_width="match_parent"
+            android:fontFamily="@font/shree"
             android:layout_height="50dp"
             android:background="@drawable/rounded_edittext"
             android:textColorHint="#b2000000"
@@ -83,13 +93,22 @@
             android:id="@+id/speciality_tv"
             android:hint="Choose a speciality" />
 
+        <ImageView
+            android:paddingRight="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            app:srcCompat="@drawable/ic_clear_black_24px"
+            android:id="@+id/clearSpeciality"
+            android:layout_alignParentRight="true"/>
+
 
         <ImageView
+            android:paddingLeft="5dp"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             app:srcCompat="@drawable/ic_hospital"
             android:id="@+id/speciality_iv"
-            android:layout_alignParentRight="true"/>
+            android:layout_alignParentLeft="true"/>
 
     </RelativeLayout>
 
@@ -101,25 +120,36 @@
         android:layout_marginRight="10dp"
         android:id="@+id/city_rl"
         android:layout_above="@+id/button_layout">
+
         <TextView
+            android:id="@+id/city_tv"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:textSize="16sp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
             android:background="@drawable/rounded_edittext"
+            android:fontFamily="@font/shree"
+            android:gravity="center"
             android:hint="Choose a City"
             android:textColorHint="#b2000000"
-            android:gravity="center"
-            android:id="@+id/city_tv"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-
+            android:textSize="16sp" />
 
         <ImageView
+            android:paddingLeft="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            app:srcCompat="@drawable/ic_clear_black_24px"
+            android:id="@+id/clearCity"
+            android:layout_alignParentRight="true"/>
+
+        <ImageView
+            android:paddingRight="5dp"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             app:srcCompat="@drawable/location"
             android:id="@+id/city_iv"
-            android:layout_alignParentRight="true"/>
+            android:layout_alignParentLeft="true"/>
 
     </RelativeLayout>
 
@@ -136,20 +166,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
+            android:textColor="@android:color/white"
             android:background="@drawable/roundedbutton"
-            android:text="Search" />
+            android:text="Search"
+            android:fontFamily="@font/shree" />
 
-        <ImageView
-            android:id="@+id/sign_in_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:src="@drawable/icon_alert_2"
-            android:textSize="17sp"
-            android:background="@drawable/roundedbutton1"
-            android:textStyle="bold"
-            android:textColor="#000"
-            android:text="Sign In" />
+        <!--<ImageView-->
+            <!--android:id="@+id/sign_in_button"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_margin="10dp"-->
+            <!--android:src="@drawable/icon_alert_2"-->
+            <!--android:textSize="17sp"-->
+            <!--android:background="@drawable/roundedbutton1"-->
+            <!--android:textStyle="bold"-->
+            <!--android:textColor="#000"-->
+            <!--android:text="Sign In" />-->
 
 
 

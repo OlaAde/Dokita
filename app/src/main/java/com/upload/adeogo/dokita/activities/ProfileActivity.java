@@ -5,26 +5,23 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
@@ -35,8 +32,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.upload.adeogo.dokita.R;
 import com.upload.adeogo.dokita.adapters.BookingsAdapter;
 import com.upload.adeogo.dokita.adapters.FavoriteAdapter;
@@ -65,20 +60,33 @@ public class ProfileActivity extends AppCompatActivity implements BookingsAdapte
     private LinearLayoutManager mFavoriteManager, mBookingsManager;
 
     private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mDeleteDatabaseReference, mFavoriteDatabaseReference, mDatabaseReference, mFormerDatabaseReference;
+    private DatabaseReference mDeleteDatabaseReference, mFavoriteDatabaseReference, mDatabaseReference, mFormerDatabaseReference, mDoctorAppointmentDatabaseReference;
     private ChildEventListener mChildEventListener, mFavoriteChildEventListener, mFormerChildEventListener;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
     private List<Appointment> mAppointmentList = new ArrayList<>();
     private List<Favorite> mFavoriteList = new ArrayList<>();
+    private List<String> mKeyList = new ArrayList<>();
 
     public static final String ANONYMOUS = "anonymous";
 
     private Appointment mPickedAppointment;
 
     public static final int RC_SIGN_IN = 1;
-    private String mUsername, userId, mEmail, mPassword;
+
+    private String mUsername, userId, mEmail, mPassword, mDoctorId, mKey;
+
+    private String mUserId, mDoctorPhone, mClientPhone, mMessage;
+    private String mTime;
+    private int mYear;
+    private int mMonth;
+    private int mDay;
+    private String mDoctorName;
+    private String mClientName;
+    private String mLocation;
+    private int mStatus;
+
 
     private LinearLayout mBodyMeasurementsLinearLayout, mResultsLinearLayout, mVitalsLinearLayout, mHealthRecordsLinearLayout;
 
@@ -93,7 +101,7 @@ public class ProfileActivity extends AppCompatActivity implements BookingsAdapte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("font/open_sans_semibold.ttf")
+                .setDefaultFontPath("font/shree.ttc")
                 .setFontAttrId(R.attr.fontPath)
                 .build());
 
@@ -115,12 +123,6 @@ public class ProfileActivity extends AppCompatActivity implements BookingsAdapte
         mResultsTextView = findViewById(R.id.results_tv);
         mVitalsTextView = findViewById(R.id.vitals_tv);
 
-        Typeface semiBoldTypeface = Typeface.createFromAsset(getAssets(), "font/open_sans_semibold.ttf");
-        Typeface italicsTypeface = Typeface.createFromAsset(getAssets(), "font/open_sans_light_italic.ttf");
-        mBodyTextView.setTypeface(semiBoldTypeface);
-        mHealthRecordsTextView.setTypeface(semiBoldTypeface);
-        mResultsTextView.setTypeface(semiBoldTypeface);
-        mVitalsTextView.setTypeface(semiBoldTypeface);
 
         mBodyMeasurementsLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -178,10 +180,12 @@ public class ProfileActivity extends AppCompatActivity implements BookingsAdapte
                 if (user != null) {
                     // User is signed in
                     userId = user.getUid();
+
                     mDatabaseReference = mFirebaseDatabase.getReference().child("users/" + userId + "/appointments");
                     mFavoriteDatabaseReference = mFirebaseDatabase.getReference().child("users/" + userId + "/favorites");
 
                     mDeleteDatabaseReference = mFirebaseDatabase.getReference().child("deleted").child("users").child(userId);
+
 
                     mFormerDatabaseReference = mFirebaseDatabase.getReference().child("users").child(userId);
 
@@ -225,16 +229,23 @@ public class ProfileActivity extends AppCompatActivity implements BookingsAdapte
             mChildEventListener = new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
                     check[0] = true;
 
                     if (check[0] == false) {
                         mCheckDataTextView.setVisibility(View.VISIBLE);
                     } else mCheckDataTextView.setVisibility(View.GONE);
 
+                    mKeyList.add(dataSnapshot.getKey());
                     Appointment appointment = dataSnapshot.getValue(Appointment.class);
                     mAppointmentList.add(appointment);
-                    mBookingsAdapter.swapData(mAppointmentList);
-                    mBookingsManager.scrollToPosition(mAppointmentList.size() - 1);
+
+                    if (appointment != null) {
+                        mBookingsAdapter.swapData(null);
+                        mBookingsAdapter.swapData(mAppointmentList);
+                        mBookingsAdapter.notifyDataSetChanged();
+                        mBookingsManager.scrollToPosition(mAppointmentList.size() - 1);
+                    }
                 }
 
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
@@ -252,6 +263,7 @@ public class ProfileActivity extends AppCompatActivity implements BookingsAdapte
                 }
             };
 
+            mDatabaseReference = mFirebaseDatabase.getReference().child("users/" + userId + "/appointments");
             mDatabaseReference.addChildEventListener(mChildEventListener);
         }
 
@@ -351,6 +363,8 @@ public class ProfileActivity extends AppCompatActivity implements BookingsAdapte
             mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
         }
         detachDatabaseReadListener();
+        mAppointmentList.clear();
+        mFavoriteList.clear();
     }
 
 
@@ -362,12 +376,50 @@ public class ProfileActivity extends AppCompatActivity implements BookingsAdapte
     @Override
     public void voidMethodBooking(List<Appointment> list, int adapterPosition) {
 
+        Appointment appointment = mAppointmentList.get(adapterPosition);
+        mUserId = appointment.getUserId();
+        mDay = appointment.getDay();
+        mClientName = appointment.getClientName();
+        mDoctorName = appointment.getDoctorName();
+        mDoctorPhone = appointment.getDoctorPhone();
+        mClientPhone = appointment.getClientPhone();
+        mLocation = appointment.getLocation();
+        mTime = appointment.getTime();
+        mStatus = appointment.getStatus();
+        mMonth = appointment.getMonth();
+        mYear = appointment.getYear();
+        mDay = appointment.getDay();
+        mMessage = appointment.getMessage();
+        mDoctorId = appointment.getDoctorId();
+
+        Intent intent = new Intent(ProfileActivity.this, AppointmentActivity.class);
+        intent.putExtra("key", mKeyList.get(adapterPosition));
+        intent.putExtra("userId", mUserId);
+        intent.putExtra("doctorId", mDoctorId);
+        intent.putExtra("clientName", mClientName);
+        intent.putExtra("doctorName", mDoctorName);
+        intent.putExtra("doctor_phone", mDoctorPhone);
+        intent.putExtra("client_phone", mClientPhone);
+        intent.putExtra("location", mLocation);
+        intent.putExtra("time", mTime);
+        intent.putExtra("status", mStatus);
+        intent.putExtra("day", mDay);
+        intent.putExtra("month", mMonth);
+        intent.putExtra("year", mYear);
+        intent.putExtra("message", mMessage);
+
+        startActivity(intent);
     }
 
     @Override
     public void cancelAppointment(List<Appointment> list, int adapterPosition) {
+
+        Appointment appointment = list.get(adapterPosition);
+        mDoctorId = appointment.getDoctorId();
         mPickedAppointment = list.get(adapterPosition);
         setDialog();
+
+        mKey = mKeyList.get(adapterPosition);
     }
 
     private void setDialog() {
@@ -381,22 +433,14 @@ public class ProfileActivity extends AppCompatActivity implements BookingsAdapte
                 .setMessage("Are you sure you want to delete this appointment?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        Query appointmentQuery = mDatabaseReference.orderByChild("doctorId").equalTo(mPickedAppointment.getDoctorId());
-                        appointmentQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                for (DataSnapshot appointmentSnapshot : dataSnapshot.getChildren()) {
-                                    appointmentSnapshot.getRef().removeValue();
-                                    finish();
-                                    startActivity(getIntent());
-                                }
-                            }
 
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                Log.e(TAG, "onCancelled", databaseError.toException());
-                            }
-                        });
+                        mDoctorAppointmentDatabaseReference = FirebaseDatabase.getInstance().getReference().child("new_doctors").child(mDoctorId).child("appointments").child("appointments").child(mKey);
+                        mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users/" + userId + "/appointments").child(mKey);
+
+                        mDatabaseReference.removeValue();
+                        mDoctorAppointmentDatabaseReference.removeValue();
+                        finish();
+                        startActivity(getIntent());
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {

@@ -37,8 +37,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private Button btnSignIn;
-    private TextView btnRegister, mForgotPsd, mRiderTextView;
+    private TextView btnRegister, mForgotPsd, mRiderTextView, btnSignIn;
     private RelativeLayout mRelativeLayout;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseDatabase mFirebaseDatabase;
@@ -47,18 +46,11 @@ public class LoginActivity extends AppCompatActivity {
     private MaterialEditText edtEmail, edtPassword;
 
 
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                                            .setDefaultFontPath("font/open_sans_semibold.ttf")
-                                            .setFontAttrId(R.attr.fontPath)
-                                            .build());
+
 
         setContentView(R.layout.activity_login);
 
@@ -67,10 +59,13 @@ public class LoginActivity extends AppCompatActivity {
         mForgotPsd = findViewById(R.id.txt_view_pwd);
 
         btnSignIn = findViewById(R.id.btnSignIn);
+        btnSignIn.setFocusableInTouchMode(false);
         btnRegister = findViewById(R.id.btnRegister);
+        btnRegister.setFocusableInTouchMode(false);
         mRelativeLayout = findViewById(R.id.rootLayout);
 
         mRiderTextView = findViewById(R.id.txt_rider_app);
+        mRiderTextView.setFocusableInTouchMode(false);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
@@ -93,7 +88,41 @@ public class LoginActivity extends AppCompatActivity {
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showLoginDialog();
+                if (TextUtils.isEmpty(edtEmail.getText().toString())){
+                    Snackbar.make(mRelativeLayout, "Please enter email address", Snackbar.LENGTH_SHORT)
+                            .show();
+                    return;
+                }
+
+                if (TextUtils.isEmpty(edtPassword.getText().toString())){
+                    Snackbar.make(mRelativeLayout, "Please enter password", Snackbar.LENGTH_SHORT)
+                            .show();
+                    return;
+                }
+
+                final android.app.AlertDialog waitingDialog = new SpotsDialog(LoginActivity.this, R.style.Custom);
+                waitingDialog.show();
+
+                mFirebaseAuth.signInWithEmailAndPassword(edtEmail.getText().toString(), edtPassword.getText().toString())
+                        .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                            @Override
+                            public void onSuccess(AuthResult authResult) {
+                                waitingDialog.dismiss();
+                                Intent intent = new Intent(LoginActivity.this, OpeningAcvtivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        waitingDialog.dismiss();
+                        Snackbar.make(mRelativeLayout, "Failed " + e.getMessage(), Snackbar.LENGTH_SHORT)
+                                .show();
+
+                        //Activate button
+                        btnSignIn.setEnabled(true);
+                    }
+                });
             }
         });
 
@@ -122,162 +151,8 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void showLoginDialog() {
-
-        btnSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Set disable button Sign In if is processing
-
-                if (TextUtils.isEmpty(edtEmail.getText().toString())){
-                    Snackbar.make(mRelativeLayout, "Please enter email address", Snackbar.LENGTH_SHORT)
-                            .show();
-                    return;
-                }
-
-                if (TextUtils.isEmpty(edtPassword.getText().toString())){
-                    Snackbar.make(mRelativeLayout, "Please enter password", Snackbar.LENGTH_SHORT)
-                            .show();
-                    return;
-                }
-
-                final android.app.AlertDialog waitingDialog = new SpotsDialog(LoginActivity.this);
-                waitingDialog.show();
-
-                mFirebaseAuth.signInWithEmailAndPassword(edtEmail.getText().toString(), edtPassword.getText().toString())
-                        .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                            @Override
-                            public void onSuccess(AuthResult authResult) {
-                                waitingDialog.dismiss();
-                                Intent intent = new Intent(LoginActivity.this, OpeningAcvtivity.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        waitingDialog.dismiss();
-                        Snackbar.make(mRelativeLayout, "Failed " + e.getMessage(), Snackbar.LENGTH_SHORT)
-                                .show();
-
-                        //Activate button
-                        btnSignIn.setEnabled(true);
-                    }
-                });
-
-            }
-        });
-    }
 
     private void showRegisterDialog() {
-//        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-//        final android.app.AlertDialog waitingDialog = new SpotsDialog(LoginActivity.this);
-//        alertDialog.setTitle("REGISTER");
-//        alertDialog.setMessage("Please use email to register");
-//
-//        LayoutInflater inflater = LayoutInflater.from(this);
-//        View register_layout = inflater.inflate(R.layout.layout_register, null);
-//
-//        final MaterialEditText edtEmail = register_layout.findViewById(R.id.edtEmail);
-//        final MaterialEditText edtPassword = register_layout.findViewById(R.id.edtPassword);
-//        final MaterialEditText edtName = register_layout.findViewById(R.id.edtName);
-//        final MaterialEditText edtPhone = register_layout.findViewById(R.id.edtPhone);
-//
-//        alertDialog.setView(register_layout);
-//
-//        alertDialog.setPositiveButton("REGISTER", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(final DialogInterface dialogInterface, int i) {
-//
-//                waitingDialog.show();
-//                if (TextUtils.isEmpty(edtEmail.getText().toString())){
-//                    Snackbar.make(mRelativeLayout, "Please enter email address", Snackbar.LENGTH_SHORT)
-//                            .show();
-//                    return;
-//                }
-//
-//                if (TextUtils.isEmpty(edtName.getText().toString())){
-//                    Snackbar.make(mRelativeLayout, "Please enter phone number", Snackbar.LENGTH_SHORT)
-//                            .show();
-//                    return;
-//                }
-//
-//                if (TextUtils.isEmpty(edtPassword.getText().toString())){
-//                    Snackbar.make(mRelativeLayout, "Please enter password", Snackbar.LENGTH_SHORT)
-//                            .show();
-//                    return;
-//                }
-//
-//                if (edtPassword.getText().toString().length()< 6){
-//                    Snackbar.make(mRelativeLayout, "Password too short !!!", Snackbar.LENGTH_SHORT)
-//                            .show();
-//                    return;
-//                }
-//
-//                if (TextUtils.isEmpty(edtPhone.getText().toString())){
-//                    Snackbar.make(mRelativeLayout, "Please enter email address", Snackbar.LENGTH_SHORT)
-//                            .show();
-//                    return;
-//                }
-//
-//                //Register new user
-//                mFirebaseAuth.createUserWithEmailAndPassword(edtEmail.getText().toString(), edtPassword.getText().toString())
-//                        .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-//                            @Override
-//                            public void onSuccess(AuthResult authResult) {
-//                                User user = new User();
-//                                user.setEmail(edtEmail.getText().toString());
-//                                user.setPassword(edtPassword.getText().toString());
-//                                user.setName(edtName.getText().toString());
-//                                user.setPhone(edtPhone.getText().toString());
-//
-//                                mDatabaseReference.child(mFirebaseAuth.getCurrentUser().getUid()).setValue(user)
-//                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                            @Override
-//                                            public void onSuccess(Void aVoid) {
-//
-//                                                FirebaseUser user = mFirebaseAuth.getCurrentUser();
-//                                                if(user!=null) {
-//                                                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-//                                                            .setDisplayName(edtName.getText().toString()).build();
-//                                                    user.updateProfile(profileUpdates);
-//                                                }
-//                                                Snackbar.make(mRelativeLayout, "Registered successfully !!!", Snackbar.LENGTH_SHORT)
-//                                                        .show();
-//                                                Intent intent = new Intent(LoginActivity.this, OpeningAcvtivity.class);
-//                                                startActivity(intent);
-//                                                waitingDialog.dismiss();
-//                                                finish();
-//                                            }
-//                                        })
-//                                .addOnFailureListener(new OnFailureListener() {
-//                                    @Override
-//                                    public void onFailure(@NonNull Exception e) {
-//                                        Snackbar.make(mRelativeLayout, "Failed " + e.getMessage(), Snackbar.LENGTH_SHORT)
-//                                                .show();
-//                                        dialogInterface.dismiss();
-//                                    }
-//                                });
-//                            }
-//                        }).addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Snackbar.make(mRelativeLayout, "Failed " + e.getMessage(), Snackbar.LENGTH_SHORT)
-//                                .show();
-//                        dialogInterface.dismiss();
-//                    }
-//                });
-//            }
-//        });
-//
-//        alertDialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//                    dialogInterface.dismiss();
-//            }
-//        });
-//
-//        alertDialog.show();
         Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(intent);
      }
@@ -297,7 +172,7 @@ public class LoginActivity extends AppCompatActivity {
         alertDialog.setPositiveButton("RESET", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(final DialogInterface dialogInterface, int i) {
-                final android.app.AlertDialog waitingDialog = new SpotsDialog(LoginActivity.this);
+                final android.app.AlertDialog waitingDialog = new SpotsDialog(LoginActivity.this, R.style.Custom);
                 if (TextUtils.isEmpty(edtEmail.getText().toString())){
                     Snackbar.make(mRelativeLayout, "Please enter email", Snackbar.LENGTH_SHORT)
                             .show();

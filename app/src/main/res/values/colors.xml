@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorPrimary">#2d2d42</color>
-    <color name="colorPrimaryDark">#070716</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#5b5a62</color>
+    <color name="colorPrimaryDark">#323138</color>
+    <color name="colorAccent">#5b5a62</color>
+
+    <color name="colorApproved">#99CC99</color>
+    <color name="colorTime">#e8d678</color>
+
+    <color name="colorChatNotYou">#785b5a62</color>
+    <color name="colorChatYou">#7b8cbeb2</color>
+
+    <color name="colorHomeTag">#388E3C</color>
+    <color name="colorOnlineTag">#4aaeec</color>
+    <color name="colorOfficeTag">#e8d678</color>
+    <color name="colorClinicTag">#5B381B</color>
+
 
     <color name="material_green_50">#E8F5E9</color>
     <color name="material_green_500">#4CAF50</color>
@@ -15,6 +27,7 @@
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="blue1">#8CBEB2</color>
+    <color name="transparent_white">#00ffffff</color>
 
     <color name="bottomText">#6b6b76</color>
     <color name="rippleEffectColor">#f816a463</color>

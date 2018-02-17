@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
@@ -28,8 +29,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.jackandphantom.circularprogressbar.CircleProgressbar;
 import com.rengwuxian.materialedittext.MaterialEditText;
-import com.squareup.picasso.Picasso;
 import com.upload.adeogo.dokita.R;
+import com.upload.adeogo.dokita.adapters.SearchAdapter;
 import com.upload.adeogo.dokita.models.User;
 
 import net.rimoto.intlphoneinput.IntlPhoneInput;
@@ -120,9 +121,12 @@ public class RegisterActivity extends AppCompatActivity {
                     // When the image has successfully uploaded, we get its download URL
                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
                     mPhotoUrl = downloadUrl.toString();
-                    Picasso.with(RegisterActivity.this)
+
+                    Glide.with(RegisterActivity.this)
                             .load(mPhotoUrl)
                             .into(mImageView);
+
+
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override

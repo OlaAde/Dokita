@@ -187,7 +187,7 @@ public class FirstActivity extends AppCompatActivity {
                 mNextTextView.setVisibility(View.VISIBLE);
                 mNextTextView.setText("Next");
 
-                mContentTextView.setText("Here you can,\nConsult with patients");
+                mContentTextView.setText("Here you can,\nConsult with Doctors");
 
                 mPreviousTextView.setOnClickListener(new View.OnClickListener() {
                     @Override

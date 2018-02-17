@@ -108,6 +108,8 @@ public class GetDataActivity extends AppCompatActivity implements ListaAdapter.L
         });
     }
 
+
+
     private void setfakeData() {
 
         if (mSetterInt == 0 ){
@@ -119,14 +121,13 @@ public class GetDataActivity extends AppCompatActivity implements ListaAdapter.L
             mSpecitlityList.add("Ophthalmologist");
             mSpecitlityList.add("Dermatologist");
             mSpecitlityList.add("Gynecologist");
-            mSpecitlityList.add("Digestive surgeon");
             mSpecitlityList.add("Hepatologist");
             mSpecitlityList.add("Cardiologist");
             mSpecitlityList.add("Diabetologist");
             mSpecitlityList.add("Ear nose throat Doctor");
             mSpecitlityList.add("General Surgeon");
             mSpecitlityList.add("Geneticist");
-            mSpecitlityList.add( "gynecologist");
+            mSpecitlityList.add( "Gynecologist");
             mSpecitlityList.add( "General Physiciain");
             mSpecitlityList.add( "Oncologist");
             mSpecitlityList.add( "Plastic Surgeon");
@@ -151,6 +152,16 @@ public class GetDataActivity extends AppCompatActivity implements ListaAdapter.L
             mCityList.add("Wakiso");
             mCityList.add("Kasese");
             mCityList.add("Kazan");
+            mCityList.add("Chipata");
+            mCityList.add("Kafue");
+            mCityList.add("LivingStone");
+            mCityList.add("Lusaka");
+            mCityList.add("Mansa");
+            mCityList.add("Mongu");
+            mCityList.add("Ndola");
+            mCityList.add("Accra");
+            mCityList.add("CapeCoast");
+            mCityList.add("Kumasi");
             mCityList.add("Moscow");
 
             mList = mCityList;
@@ -181,6 +192,7 @@ public class GetDataActivity extends AppCompatActivity implements ListaAdapter.L
             }
         });
     }
+
     @Override
     public void voidMethod(List<String> list, int adapterPosition) {
         Intent intent = new Intent(GetDataActivity.this, OpeningAcvtivity.class);

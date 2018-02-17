@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,10 +31,8 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class QuestionListActivity extends AppCompatActivity implements ListAdapter.ListAdapterOnclickHandler {
 
-    private String userId;
     public static final String ANONYMOUS = "anonymous";
-    private String mUsername;
-    private String mDoctorName;
+    private String mDoctorName, mUsername, userId;
     private ListAdapter mListAdapter;
     private LinearLayoutManager mManager;
     private RecyclerView mRecyclerView;
@@ -42,26 +42,21 @@ public class QuestionListActivity extends AppCompatActivity implements ListAdapt
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mChatDatabaseReference;
+    private DatabaseReference mPictureDatabaseReference;
     private ChildEventListener mChildEventListener;
 
+    private ProgressBar mProgressBar;
     private List<ChatHead> mChatList = new ArrayList<>();
 
 
     @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("font/open_sans_semibold.ttf")
-                .setFontAttrId(R.attr.fontPath)
-                .build());
+
 
         setContentView(R.layout.activity_question_list);
         mRecyclerView = (RecyclerView) findViewById(R.id.messages_recycler_view);
+        mProgressBar = findViewById(R.id.progressBar);
 
         mListAdapter = new ListAdapter(QuestionListActivity.this, this);
         mManager = new LinearLayoutManager(this);
@@ -91,6 +86,8 @@ public class QuestionListActivity extends AppCompatActivity implements ListAdapt
                 }
             }
         };
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void onSignedInInitialize(String username) {
@@ -110,6 +107,7 @@ public class QuestionListActivity extends AppCompatActivity implements ListAdapt
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     ChatHead chatHead = dataSnapshot.getValue(ChatHead.class);
 
+                    mProgressBar.setVisibility(View.INVISIBLE);
                     if (chatHead!= null ){
                         boolean check = true;
                         for(int i = 0; i < mChatList.size(); i++){
@@ -163,6 +161,7 @@ public class QuestionListActivity extends AppCompatActivity implements ListAdapt
         ChatHead chatHead = list.get(adapterPosition);
         intent.putExtra("doctor_id", chatHead.getUserId());
         intent.putExtra("doctor_name", chatHead.getUserName());
+        intent.putExtra("pictureUrl", chatHead.getPictureUrl());
         startActivity(intent);
     }
 

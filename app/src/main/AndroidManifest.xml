@@ -17,13 +17,7 @@
         <activity
             android:name=".activities.OpeningAcvtivity"
             android:launchMode="singleTop"
-            android:theme="@style/MyTheme2">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/MyTheme2"></activity>
         <activity
             android:name=".activities.GetDataActivity"
             android:parentActivityName=".activities.OpeningAcvtivity" />
@@ -69,7 +63,9 @@
         <activity
             android:name=".activities.ProfileActivity"
             android:parentActivityName=".activities.OpeningAcvtivity" />
-        <activity android:name=".activities.QuestionListActivity" />
+        <activity
+            android:name=".activities.QuestionListActivity"
+            android:parentActivityName=".activities.OpeningAcvtivity" />
         <activity
             android:name=".activities.LoginActivity"
             android:theme="@style/MyTheme2" />
@@ -91,11 +87,26 @@
         <activity
             android:name=".activities.SupportActivity"
             android:parentActivityName=".activities.ProfileActivity" />
-        <activity android:name=".activities.RegisterActivity"
-            android:parentActivityName=".activities.LoginActivity">
+        <activity
+            android:name=".activities.RegisterActivity"
+            android:parentActivityName=".activities.LoginActivity" />
+        <activity
+            android:name=".activities.AppointmentActivity"
+            android:parentActivityName=".activities.ProfileActivity" />
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="370e4b0fb4b72bc94add262f681921bd88d14b8b" />
+
+        <activity
+            android:name=".activities.SplashActivity"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

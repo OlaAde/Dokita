@@ -10,19 +10,25 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.upload.adeogo.dokita.R;
-import com.upload.adeogo.dokita.adapters.TimeAdapter;
+import com.upload.adeogo.dokita.adapters.SearchAdapter;
 import com.upload.adeogo.dokita.models.Appointment;
 import com.github.badoualy.datepicker.DatePickerTimeline;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,47 +36,44 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.squareup.picasso.Picasso;
 import com.upload.adeogo.dokita.models.Notification;
-import com.upload.adeogo.dokita.models.Time;
 import com.upload.adeogo.dokita.services.NotifyService;
+import com.upload.adeogo.dokita.utils.IdGenerator;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.StringTokenizer;
+import java.util.Random;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class OrderActivity extends AppCompatActivity implements TimeAdapter.TimeAdapterOnclickHandler {
+public class OrderActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
 
-    private TextView mBookAppointmentTextView;
-    private TextView mNameTextView;
-    private TextView mSpecialityTextView;
+    private TextView mBookAppointmentTextView, mNameTextView, mSpecialityTextView, mMessageTextView;
+    private TextView mSundayDateTextView, mMondayDateTextView, mTuesdayDateTextView, mWednesdayDateTextView, mThursdayDateTextView, mFridayDateTextView, mSaturdayDateTextView;
 
-    private TimeAdapter mTimeAdapter;
-    private RecyclerView mTimeRecyclerView;
-    private LinearLayoutManager mManager;
-    private List<Time> mTimeList = new ArrayList<>();
+    private ImageView mTimeLabelTextView;
+
+    private TimePickerDialog tpd;
+    private DatePickerDialog mDatePickerDialog;
 
     private CircleImageView mProfileImageView;
 
-    private DatePickerTimeline timeline;
-    private int timeSetter;
 
-    private int mYear;
-    private int mMonth;
-    private int mDay = -1;
+    private int mDay = -1, mMonth, mYear, timeSetter, startHour, startMinute, endHour, endMinute, sunday = 0, monday = 0, tuesday = 0, wednesday = 0, thursday = 0, friday = 0, saturday = 0;
 
-    private String mOrderTxt, mDescription, mClientName, mDoctorNumber, mPictureUrl, mDoctorSpecialist, mDoctorName, mDateText, mTimeInt = null,
-             userId, doctor_id, mUsername, mPhoneNumber, mMessage;
+    private String mOrderTxt, mDescription, mClientName, mDoctorPhoneNumber, mClientPhoneNumber, mDoctorSpecialist, mDoctorName, mDateText, mTimeString = null,
+             userId, doctor_id, mUsername, mMessage, mAppointmentKey, mPictureUrl, mSelfPhotoUrl;
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
-    private DatabaseReference mSelfDatabaseReference;
-    private ChildEventListener mChildEventListener;
+    private DatabaseReference mSelfDatabaseReference, mSelfProfileDatabase;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
@@ -78,30 +81,39 @@ public class OrderActivity extends AppCompatActivity implements TimeAdapter.Time
 
     public static final int RC_SIGN_IN = 1;
 
+    private LinearLayout mTimeLayout;
+    private TextView mTimeTextView;
 
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("font/open_sans_semibold.ttf")
-                .setFontAttrId(R.attr.fontPath)
-                .build());
+
 
         setContentView(R.layout.activity_order);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Set Appointment");
+
+        mSundayDateTextView = findViewById(R.id.sunday);
+        mMondayDateTextView = findViewById(R.id.monday);
+        mTuesdayDateTextView = findViewById(R.id.tuesday);
+        mWednesdayDateTextView = findViewById(R.id.wednesday);
+        mThursdayDateTextView = findViewById(R.id.thursday);
+        mFridayDateTextView = findViewById(R.id.friday);
+        mSaturdayDateTextView = findViewById(R.id.saturday);
+
+        mMessageTextView = findViewById(R.id.message);
+
         mBookAppointmentTextView = (TextView) findViewById(R.id.book_appointment);
         mNameTextView = (TextView) findViewById(R.id.profile_name);
         mSpecialityTextView = (TextView) findViewById(R.id.profile_speciality);
+        mTimeLabelTextView = findViewById(R.id.pickTimeLabel);
+        mTimeTextView = findViewById(R.id.timePickedTextVIew);
+
+        mTimeLayout = findViewById(R.id.timeLayout);
 
         mProfileImageView = (CircleImageView) findViewById(R.id.profile_image);
-        mTimeRecyclerView = findViewById(R.id.timePickingRecyclerView);
 
         Typeface semiBoldTypeface = Typeface.createFromAsset(getAssets(), "font/open_sans_semibold.ttf");
         Typeface italicsTypeface = Typeface.createFromAsset(getAssets(), "font/open_sans_light_italic.ttf");
@@ -114,14 +126,23 @@ public class OrderActivity extends AppCompatActivity implements TimeAdapter.Time
         mDoctorName = intent.getStringExtra("name");
         mDoctorSpecialist =  intent.getStringExtra("speciality");
         mPictureUrl =  intent.getStringExtra("picture_url");
-        mPhoneNumber = intent.getStringExtra("phone_number");
+        mDoctorPhoneNumber = intent.getStringExtra("phone_number");
+        startHour = intent.getIntExtra("start_time_hour", 0);
+        startMinute = intent.getIntExtra("start_time_minute", 0);
+        endHour = intent.getIntExtra("end_time_hour", 0);
+
+        sunday = intent.getIntExtra("sunday", 0);
+        monday = intent.getIntExtra("monday", 0);
+        tuesday = intent.getIntExtra("tuesday", 0);
+        wednesday = intent.getIntExtra("wednesday", 0);
+        thursday = intent.getIntExtra("thursday", 0);
+        friday = intent.getIntExtra("friday", 0);
+        saturday = intent.getIntExtra("saturday", 0);
+
+        mPictureUrl = intent.getStringExtra("pictureUrl");
+        mSelfPhotoUrl = intent.getStringExtra("selfPictureUrl");
 
 
-        mManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false);
-        mTimeAdapter = new TimeAdapter(this, this);
-
-        mTimeRecyclerView.setAdapter(mTimeAdapter);
-        mTimeRecyclerView.setLayoutManager(mManager);
         //firebase
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseAuth = FirebaseAuth.getInstance();
@@ -135,6 +156,7 @@ public class OrderActivity extends AppCompatActivity implements TimeAdapter.Time
                     mUsername = user.getDisplayName();
                     mClientName = mUsername;
                     mSelfDatabaseReference = mFirebaseDatabase.getReference().child("users/" + userId + "/appointments");
+                    mSelfProfileDatabase = mFirebaseDatabase.getReference().child("users/" + userId);
                     onSignedInInitialize(user.getDisplayName());
                 } else {
                     // User is signed out
@@ -144,61 +166,120 @@ public class OrderActivity extends AppCompatActivity implements TimeAdapter.Time
             }
         };
 
+        mSelfProfileDatabase = mFirebaseDatabase.getReference().child("users/" + userId);
+
         mDatabaseReference = mFirebaseDatabase.getReference().child("new_doctors/" + doctor_id + "/appointments/appointments");
 
         //Custom DatePicker
-        timeline = (DatePickerTimeline) findViewById(R.id.date_picker);
-        Calendar calendar = Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
 
         int thisYear = calendar.get(Calendar.YEAR);
 
-        int thisMonth = calendar.get(Calendar.MONTH);
+        final int thisMonth = calendar.get(Calendar.MONTH);
 
         final int thisDay = calendar.get(Calendar.DAY_OF_MONTH);
 
-        timeline.setFirstVisibleDate(thisYear, thisMonth, thisDay - 1);
 
-        timeline.setLastVisibleDate(2090, Calendar.JULY, 19);
-
-        timeline.setOnDateSelectedListener(new DatePickerTimeline.OnDateSelectedListener() {
-            @Override
-            public void onDateSelected(int year, int month, int day, int index) {
-                mDateText = day + "/" + month + "/" + year;
-                if (day < thisDay){
-                    Toast.makeText(OrderActivity.this, "Pick a day not in the past", Toast.LENGTH_SHORT).show();
-                    mDateText = null;
-                }else {
-                    mDay = day;
-                    mMonth = month;
-                    mYear = year;
-                }
-
-            }
-        });
+        updateDateColor();
 
         mBookAppointmentTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mTimeInt == null){
+                if (mTimeString == null){
                     Toast.makeText(OrderActivity.this, "You forgot to pick a Time", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (mDateText == null || mDay == -1){
-                    Toast.makeText(OrderActivity.this, "You forgot to pick a Date", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+//                if (mDateText == null || mDay == -1){
+//                    Toast.makeText(OrderActivity.this, "You forgot to pick a Date", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
                 sendAppointment();
             }
         });
 
-        setTimes();
 
         mNameTextView.setText(mDoctorName);
         mSpecialityTextView.setText(mDoctorSpecialist);
-        Picasso.with(this)
+
+        Glide.with(this)
                 .load(mPictureUrl)
                 .into(mProfileImageView);
 
+        ChildEventListener eventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if (TextUtils.equals("phone", dataSnapshot.getKey())){
+                    mClientPhoneNumber = dataSnapshot.getValue().toString();
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+
+        if (eventListener!= null){
+            mSelfProfileDatabase.addChildEventListener(eventListener);
+        }
+
+
+        mTimeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar now = Calendar.getInstance();
+
+                if (tpd == null) {
+                    tpd = TimePickerDialog.newInstance(
+                            OrderActivity.this,
+                            now.get(Calendar.HOUR_OF_DAY),
+                            now.get(Calendar.MINUTE),
+                            true
+                    );
+                } else {
+                    tpd.initialize(
+                            OrderActivity.this,
+                            now.get(Calendar.HOUR_OF_DAY),
+                            now.get(Calendar.MINUTE),
+                            now.get(Calendar.SECOND),
+                            true
+                    );
+                }
+
+               tpd.setMinTime(startHour, startMinute, 00);
+                tpd.setMaxTime(endHour, endMinute, 00);
+
+                tpd.show(getFragmentManager(), "Timepickerdialog");
+
+            }
+        });
+
+        mMessageTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(OrderActivity.this, QuestionActivity.class);
+                intent.putExtra("doctor_name", mDoctorName);
+                intent.putExtra("doctor_id", doctor_id);
+                intent.putExtra("pictureUrl", mPictureUrl);
+                intent.putExtra("selfPhotoUrl", mSelfPhotoUrl);
+                startActivity(intent);
+            }
+        });
     }
 
 
@@ -213,19 +294,22 @@ public class OrderActivity extends AppCompatActivity implements TimeAdapter.Time
         input.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE | InputType.TYPE_CLASS_TEXT);
         builder.setView(input);
 
+
+
 // Set up the buttons
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(final DialogInterface dialog, final int which) {
                 mMessage = input.getText().toString();
 
-
-
                 if (mMessage.length() > 25){
-                    mPhoneNumber.trim();
 
-                    mDatabaseReference.push().setValue(new Appointment(userId, doctor_id, mTimeInt, mYear, mMonth, mDay, mDoctorNumber, "", mDoctorName, mClientName, "The General Hospital", 0, mMessage));
-                    mSelfDatabaseReference.push().setValue(new Appointment(userId,doctor_id, mTimeInt, mYear, mMonth, mDay, mDoctorNumber,"", mDoctorName, mClientName, "The General Hospital", 0, mMessage));
+                    IdGenerator idGenerator = new IdGenerator(new Random());
+                    mAppointmentKey = idGenerator.nextId();
+
+                    Toast.makeText(OrderActivity.this, "Here " + mSelfPhotoUrl, Toast.LENGTH_SHORT).show();
+                    mDatabaseReference.child(mAppointmentKey).setValue(new Appointment(userId, doctor_id, mTimeString, mYear, mMonth, mDay, mDoctorPhoneNumber, mClientPhoneNumber, mDoctorName, mClientName, "The General Hospital", 0, mMessage, mSelfPhotoUrl));
+                    mSelfDatabaseReference.child(mAppointmentKey).setValue(new Appointment(userId,doctor_id, mTimeString, mYear, mMonth, mDay, mDoctorPhoneNumber,mClientPhoneNumber, mDoctorName, mClientName, "The General Hospital", 0, mMessage, mSelfPhotoUrl));
 
                     Notification notification = new Notification();
                     notification.setText(mUsername + " has booked a appointment with you");
@@ -244,7 +328,6 @@ public class OrderActivity extends AppCompatActivity implements TimeAdapter.Time
                 } else {
                     Toast.makeText(OrderActivity.this, "Please enter more details", Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -254,9 +337,44 @@ public class OrderActivity extends AppCompatActivity implements TimeAdapter.Time
             }
         });
 
-        builder.show();
+        final AlertDialog dialog = builder.create();
+
+        dialog.setOnShowListener(new DialogInterface.OnShowListener()
+        {
+            @Override
+            public void onShow(DialogInterface dialog)
+            {
+                    ((AlertDialog)dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+            }
+        });
 
 
+        input.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE)
+                        .setEnabled(false);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.toString().trim().length() > 25) {
+                    ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE)
+                            .setEnabled(true);
+                } else {
+                    ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE)
+                            .setEnabled(false);                        }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+
+        dialog.show();
     }
 
     private void onSignedInInitialize(String username) {
@@ -281,29 +399,7 @@ public class OrderActivity extends AppCompatActivity implements TimeAdapter.Time
         }
     }
 
-    private void setTimes(){
-        mTimeList.add(new Time("10:00", 1));
-        mTimeList.add(new Time("10:30", 1));
-        mTimeList.add(new Time("11:00", 1));
-        mTimeList.add(new Time("11:30", 1));
-        mTimeList.add(new Time("12:30", 1));
-        mTimeList.add(new Time("13:00", 1));
-        mTimeList.add(new Time("13:30", 1));
-        mTimeList.add(new Time("14:00", 1));
-        mTimeList.add(new Time("14:30", 1));
-        mTimeList.add(new Time("15:00", 1));
-        mTimeList.add(new Time("15:30", 1));
-        mTimeList.add(new Time("16:30", 1));
 
-        mTimeAdapter.swapData(mTimeList);
-    }
-
-    private void setPickedTime(int position){
-        mTimeList.get(position).setPicked(0);
-        mTimeInt = mTimeList.get(position).getTime();
-        mTimeAdapter.swapData(mTimeList);
-        Toast.makeText(this, mTimeInt, Toast.LENGTH_SHORT).show();
-    }
 
     private void setAlarm(){
 
@@ -335,36 +431,61 @@ public class OrderActivity extends AppCompatActivity implements TimeAdapter.Time
         }
     }
 
-    @Override
-    public void voidMethod(List<Time> list, int adapterPosition) {
-        setPickedTime(adapterPosition);
-    }
+    private void updateDateColor(){
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.chat, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_save) {
-            Intent intent = new Intent(OrderActivity.this, QuestionActivity.class);
-            intent.putExtra("doctor_name", mDoctorName);
-            intent.putExtra("doctor_id", doctor_id);
-
-            startActivity(intent);
-            return true;
+        if (sunday == 1){
+            mSundayDateTextView.setBackground(OrderActivity.this.getResources().getDrawable(R.drawable.curved_button_background_clicked));
+            mSundayDateTextView.setBackground(OrderActivity.this.getResources().getDrawable(R.drawable.curved_button_background));
         }
-        return super.onOptionsItemSelected(item);
+
+        if (monday == 1){
+            mMondayDateTextView.setBackground(OrderActivity.this.getResources().getDrawable(R.drawable.curved_button_background_clicked));
+        }else if (monday == 0){
+            mMondayDateTextView.setBackground(OrderActivity.this.getResources().getDrawable(R.drawable.curved_button_background));
+        }
+
+
+        if (tuesday == 1){
+            mTuesdayDateTextView.setBackground(OrderActivity.this.getResources().getDrawable(R.drawable.curved_button_background_clicked));
+        }else if (tuesday == 0){
+            mTuesdayDateTextView.setBackground(OrderActivity.this.getResources().getDrawable(R.drawable.curved_button_background));
+        }
+
+        if (wednesday == 1){
+            mWednesdayDateTextView.setBackground(OrderActivity.this.getResources().getDrawable(R.drawable.curved_button_background_clicked));
+        }else if (wednesday == 0){
+            mWednesdayDateTextView.setBackground(OrderActivity.this.getResources().getDrawable(R.drawable.curved_button_background));
+        }
+
+
+        if (thursday == 1){
+            mThursdayDateTextView.setBackground(OrderActivity.this.getResources().getDrawable(R.drawable.curved_button_background_clicked));
+        }else if (thursday == 0){
+            mThursdayDateTextView.setBackground(OrderActivity.this.getResources().getDrawable(R.drawable.curved_button_background));
+        }
+
+        if (friday == 1){
+            mFridayDateTextView.setBackground(OrderActivity.this.getResources().getDrawable(R.drawable.curved_button_background_clicked));
+        }else if (friday == 0){
+            mFridayDateTextView.setBackground(OrderActivity.this.getResources().getDrawable(R.drawable.curved_button_background));
+        }
+
+        if (saturday == 1){
+            mSaturdayDateTextView.setBackground(OrderActivity.this.getResources().getDrawable(R.drawable.curved_button_background_clicked));
+        }else if (saturday == 0){
+            mSaturdayDateTextView.setBackground(OrderActivity.this.getResources().getDrawable(R.drawable.curved_button_background));
+        }
     }
 
 
+    @Override
+    public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
+        mTimeString = hourOfDay + ":" + minute;
+
+        if (minute < 10){
+           mTimeString = hourOfDay + ":0" + minute;
+        }
+
+        mTimeTextView.setText(mTimeString);
+    }
 }

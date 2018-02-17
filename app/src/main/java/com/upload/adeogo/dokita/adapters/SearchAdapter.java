@@ -11,9 +11,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.upload.adeogo.dokita.R;
-import com.upload.adeogo.dokita.models.Doctor;
-import com.squareup.picasso.Picasso;
 import com.upload.adeogo.dokita.models.DoctorProfile;
 
 import java.util.List;
@@ -44,7 +43,7 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     public class SearchAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public final TextView mNameTextView;
-        public final TextView mSpecialityTextView;
+        public final TextView mSpecialityTextView, mHomeTextView, mOnlineTextView, mOfficeTextView, mClinicTextView;
         public final ImageView mDoctorImageView;
         public final View mShowLineView;
         public final LinearLayout mWholeLinearLayout;
@@ -54,8 +53,16 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             super(itemView);
             mNameTextView = (TextView) itemView.findViewById(R.id.search_doctor_name);
             mSpecialityTextView = (TextView) itemView.findViewById(R.id.search_doctor_speciality);
+
+            mHomeTextView = (TextView) itemView.findViewById(R.id.home_tv);
+            mOnlineTextView = (TextView) itemView.findViewById(R.id.online_tv);
+            mOfficeTextView = (TextView) itemView.findViewById(R.id.office_tv);
+            mClinicTextView = (TextView) itemView.findViewById(R.id.clinic_tv);
+
             mDoctorImageView = (ImageView) itemView.findViewById(R.id.search_doctor_image);
             mWholeLinearLayout = itemView.findViewById(R.id.whole_search_ll);
+
+
 
             Typeface nameTypeface = Typeface.createFromAsset(mContext.getAssets(), "font/open_sans_semibold.ttf");
             Typeface specialityTypeface = Typeface.createFromAsset(mContext.getAssets(), "font/open_sans_light_italic.ttf");
@@ -87,12 +94,17 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         String name = null;
         String imageUrl = null;
         String speciality = null;
+        int online = 0, home = 0, office = 0, clinic = 0;
 
         if(mDoctorList != null){
             DoctorProfile doctor = mDoctorList.get(position);
             name = doctor.getName();
             imageUrl = doctor.getPictureUrl();
             speciality = doctor.getSpeciality();
+            online = doctor.getOnlineConsult();
+            office = doctor.getOfficeVisit();
+            home = doctor.getHomeVisit();
+            clinic = doctor.getClinic();
         }
 
         if (TextUtils.isEmpty(name)){
@@ -102,11 +114,34 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         ((SearchAdapterViewHolder) holder).mNameTextView.setText(name);
         ((SearchAdapterViewHolder) holder).mSpecialityTextView.setText(speciality);
 
-        Picasso.with(mContext)
+        Glide.with(mContext)
                 .load(imageUrl)
-                .resize(80, 80)
-                .centerCrop()
                 .into(((SearchAdapterViewHolder) holder).mDoctorImageView);
+
+
+        if (online == 0){
+            ((SearchAdapterViewHolder) holder).mOnlineTextView.setVisibility(View.GONE);
+        }else if (online == 1){
+            ((SearchAdapterViewHolder) holder).mOnlineTextView.setVisibility(View.VISIBLE);
+        }
+
+        if (home == 0){
+            ((SearchAdapterViewHolder) holder).mHomeTextView.setVisibility(View.GONE);
+        }else if (home == 1){
+            ((SearchAdapterViewHolder) holder).mHomeTextView.setVisibility(View.VISIBLE);
+        }
+
+        if (office == 0){
+            ((SearchAdapterViewHolder) holder).mOfficeTextView.setVisibility(View.GONE);
+        }else if (office == 1){
+            ((SearchAdapterViewHolder) holder).mOfficeTextView.setVisibility(View.VISIBLE);
+        }
+
+        if (clinic == 0){
+            ((SearchAdapterViewHolder) holder).mClinicTextView.setVisibility(View.GONE);
+        }else if (clinic == 1){
+            ((SearchAdapterViewHolder) holder).mClinicTextView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

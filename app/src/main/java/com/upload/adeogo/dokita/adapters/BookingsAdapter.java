@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.upload.adeogo.dokita.R;
 import com.upload.adeogo.dokita.models.Appointment;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -21,6 +22,7 @@ import java.util.List;
 public class BookingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     Context mContext;
     private List<Appointment> mList = null;
+    private List<String> mLabelList = new ArrayList<>();
 
     private final BookingsAdapter.BookingsAdapterOnclickHandler mClickHandler;
 
@@ -33,6 +35,10 @@ public class BookingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public BookingsAdapter(Context context, BookingsAdapter.BookingsAdapterOnclickHandler listAdapterOnclickHandler){
         mContext = context;
         mClickHandler = listAdapterOnclickHandler;
+        mLabelList.add("Pending");
+        mLabelList.add("Accepted");
+        mLabelList.add("Cancelled");
+        mLabelList.add("Overdue");
     }
 
     public class BookingsAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -79,12 +85,14 @@ public class BookingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         String Name = null;
         String Location = null;
         String Date = null;
+        int status = 0;
 
         if(mList != null){
             Appointment appointment = mList.get(position);
 
             Name = appointment.getDoctorName();
             Location = appointment.getLocation();
+            status = appointment.getStatus();
 
             Calendar calendar = Calendar.getInstance();
 
@@ -99,12 +107,12 @@ public class BookingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }else if (appointment.getDay() == thisDay + 1 && appointment.getMonth() == thisMonth + 1 && appointment.getYear() == thisYear + 1){
                 Date = "Tomorrow, " + appointment.getTime();
             }else
-                Date = appointment.getTime() + " on " + appointment.getDay() + "/" + appointment.getMonth() + "/" + appointment.getYear();
+                Date = appointment.getTime();
         }
 
         ((BookingsAdapterViewHolder) holder).mNameTextView.setText(Name);
-        ((BookingsAdapterViewHolder) holder).mLocationTextView.setText(Location);
-        ((BookingsAdapterViewHolder) holder).mDateTextView.setText(Date);
+        ((BookingsAdapterViewHolder) holder).mLocationTextView.setText(Date);
+        ((BookingsAdapterViewHolder) holder).mDateTextView.setText(mLabelList.get(status));
     }
 
 

@@ -2,6 +2,7 @@ package com.upload.adeogo.dokita.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,7 +11,10 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.upload.adeogo.dokita.R;
@@ -42,15 +46,19 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.S
     private String urlFemale = "https://firebasestorage.googleapis.com/v0/b/dokita-c3d87.appspot.com/o/generic_photos%2Ficon_female.png?alt=media&token=eaecb6c4-5f7c-4bd6-ae8f-6a7a73e27a80";
     private String urlMale = "https://firebasestorage.googleapis.com/v0/b/dokita-c3d87.appspot.com/o/generic_photos%2Ficon_male.png?alt=media&token=e4530bf8-4f41-495d-885e-e2c73007b395";
 
-    private String queryName;
+    private String queryName, mSelfUrl, userId;
     private String queryCity;
     private String querySpeciality;
 
     private TextView mNoDataTextView;
 
     private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mDoctorsReference;
+    private DatabaseReference mDoctorsReference, mSelfReference;
     private ChildEventListener mChildEventListener;
+
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseAuth.AuthStateListener mListener;
+
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -75,7 +83,13 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.S
 
         //firebase
         mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mFirebaseAuth = FirebaseAuth.getInstance();
+
+        String userId = mFirebaseAuth.getCurrentUser().getUid();
+
+        mSelfReference = mFirebaseDatabase.getReference().child("users").child(userId);
         mDoctorsReference = mFirebaseDatabase.getReference().child("new_doctors/all_profiles");
+
 
         mManager = new LinearLayoutManager(this);
         mAdapter = new SearchAdapter(this, this);
@@ -85,10 +99,13 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.S
         queryName = intent.getStringExtra("doctor_name");
         queryCity = intent.getStringExtra("city");
         querySpeciality = intent.getStringExtra("speciality");
+
         mChildEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
+                if (TextUtils.equals(dataSnapshot.getKey(), "photoUrl")){
+                    mSelfUrl = dataSnapshot.getValue().toString();
+                }
             }
 
             @Override
@@ -112,7 +129,8 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.S
             }
         };
 
-        mDoctorsReference.addChildEventListener(mChildEventListener);
+
+        mSelfReference.addChildEventListener(mChildEventListener);
 
         Query appointmentQuery = null;
         if (queryName!=null){
@@ -160,6 +178,10 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.S
                 Log.e(TAG, "onCancelled", databaseError.toException());
             }
         });
+
+
+
+
     }
 
     private void iterator(CharSequence constraint, int which){
@@ -198,6 +220,20 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.S
         intent.putExtra("speciality", doctor.getSpeciality());
         intent.putExtra("picture_url", doctor.getPictureUrl());
         intent.putExtra("doctor_id", doctor.getDoctorId());
+        intent.putExtra("start_time_hour", doctor.getStartHour());
+        intent.putExtra("start_time_minute", doctor.getStartMinute());
+        intent.putExtra("end_time_hour", doctor.getEndHour());
+        intent.putExtra("end_time_minute", doctor.getEndMinute());
+        intent.putExtra("sunday", doctor.getSunday());
+        intent.putExtra("monday", doctor.getMonday());
+        intent.putExtra("tuesday", doctor.getTuesday());
+        intent.putExtra("wednesday", doctor.getWednesday());
+        intent.putExtra("thursday", doctor.getThursday());
+        intent.putExtra("friday", doctor.getFirday());
+        intent.putExtra("saturday", doctor.getSaturday());
+        intent.putExtra("pictureUrl", doctor.getPictureUrl());
+        intent.putExtra("selfPictureUrl", mSelfUrl);
+
         startActivity(intent);
     }
 

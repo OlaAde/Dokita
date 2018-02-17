@@ -32,4 +32,13 @@
     <string name="action_support">Contact Us</string>
     <string name="action_register">Register</string>
 
+    <string name="action_pending">Pending</string>
+    <string name="action_approved">Accepted</string>
+    <string name="action_cancelled">Cancelled</string>
+    <string name="action_done">Done</string>
+    <string name="dokitari">DOKITARI</string>
+    <string name="client_app">Client App</string>
+    <string name="action_main_page">Main Page</string>
+    <string name="thank_you_message">Thanks For Your Feedback</string>
+
 </resources>

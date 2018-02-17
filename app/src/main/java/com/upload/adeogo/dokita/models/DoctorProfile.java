@@ -5,132 +5,236 @@ package com.upload.adeogo.dokita.models;
  */
 
 public class DoctorProfile {
-    private String DoctorId;
-    private String Name;
-    private String DoctorPhoneNumber;
-    private String PictureUrl;
-    private String Email;
-    private String Password;
-    private String Country;
-    private String City;
-    private String Speciality;
-
-    private String HighestCost;
-    private String LowestCost;
-    private String SpecialCost;
+    private String DoctorId, Name, DoctorPhoneNumber, PictureUrl, Email, Password, Country, City, Speciality, ConsultationFee;
+    private int sunday, monday, tuesday, wednesday, thursday, firday, saturday, startHour, startMinute, endHour, endMinute, onlineConsult, homeVisit, officeVisit, clinic;
 
     public DoctorProfile(){}
 
-    public DoctorProfile(String doctorId, String email, String password, String name, String doctorPhoneNumber, String pictureUrl, String country, String city, String speciality, String highestCost, String lowestCost, String specialCost){
+    public DoctorProfile(String doctorId, String name, String doctorPhoneNumber, String pictureUrl, String email, String password, String country, String city, String speciality, String consultationFee, int sunday, int monday, int tuesday, int wednesday, int thursday, int firday, int saturday, int startHour, int startMinute, int endHour, int endMinute, int onlineConsult, int homeVisit, int officeVisit, int clinic) {
         DoctorId = doctorId;
         Name = name;
         DoctorPhoneNumber = doctorPhoneNumber;
         PictureUrl = pictureUrl;
-        Country = country;
-        City = city;
         Email = email;
         Password = password;
+        Country = country;
+        City = city;
         Speciality = speciality;
-        HighestCost = highestCost;
-        LowestCost = lowestCost;
-        SpecialCost = specialCost;
+        ConsultationFee = consultationFee;
+        this.sunday = sunday;
+        this.monday = monday;
+        this.tuesday = tuesday;
+        this.wednesday = wednesday;
+        this.thursday = thursday;
+        this.firday = firday;
+        this.saturday = saturday;
+        this.startHour = startHour;
+        this.startMinute = startMinute;
+        this.endHour = endHour;
+        this.endMinute = endMinute;
+        this.onlineConsult = onlineConsult;
+        this.homeVisit = homeVisit;
+        this.officeVisit = officeVisit;
+        this.clinic = clinic;
     }
 
-
-    public void setHighestCost(String highestCost) {
-
-        HighestCost = highestCost;
-    }
-
-    public void setLowestCost(String lowestCost) {
-        LowestCost = lowestCost;
-    }
-
-    public void setSpecialCost(String specialCost) {
-        SpecialCost = specialCost;
-    }
-
-    public String getHighestCost() {
-        return HighestCost;
-    }
-
-    public String getLowestCost() {
-        return LowestCost;
-    }
-
-    public String getSpecialCost() {
-        return SpecialCost;
+    public String getDoctorId() {
+        return DoctorId;
     }
 
     public void setDoctorId(String doctorId) {
         DoctorId = doctorId;
     }
 
-    public void setSpeciality(String speciality) {
-        Speciality = speciality;
-    }
-
-    public void setEmail(String email) {
-        Email = email;
-    }
-
-    public void setPassword(String password) {
-        Password = password;
-    }
-
-    public void setCity(String city) {
-        City = city;
-    }
-
-    public void setCountry(String country) {
-        Country = country;
-    }
-
-    public void setDoctorPhoneNumber(String doctorPhoneNumber) {
-        DoctorPhoneNumber = doctorPhoneNumber;
+    public String getName() {
+        return Name;
     }
 
     public void setName(String name) {
         Name = name;
     }
 
-    public void setPictureUrl(String pictureUrl) {
-        PictureUrl = pictureUrl;
-    }
-
     public String getDoctorPhoneNumber() {
         return DoctorPhoneNumber;
     }
 
-    public String getCity() {
-        return City;
-    }
-
-    public String getCountry() {
-        return Country;
-    }
-
-    public String getEmail() {
-        return Email;
-    }
-
-    public String getPassword() {
-        return Password;
-    }
-
-    public String getName() {
-        return Name;
+    public void setDoctorPhoneNumber(String doctorPhoneNumber) {
+        DoctorPhoneNumber = doctorPhoneNumber;
     }
 
     public String getPictureUrl() {
         return PictureUrl;
     }
 
+    public void setPictureUrl(String pictureUrl) {
+        PictureUrl = pictureUrl;
+    }
+
+    public String getEmail() {
+        return Email;
+    }
+
+    public void setEmail(String email) {
+        Email = email;
+    }
+
+    public String getPassword() {
+        return Password;
+    }
+
+    public void setPassword(String password) {
+        Password = password;
+    }
+
+    public String getCountry() {
+        return Country;
+    }
+
+    public void setCountry(String country) {
+        Country = country;
+    }
+
+    public String getCity() {
+        return City;
+    }
+
+    public void setCity(String city) {
+        City = city;
+    }
+
     public String getSpeciality() {
         return Speciality;
     }
 
-    public String getDoctorId() {
-        return DoctorId;
+    public void setSpeciality(String speciality) {
+        Speciality = speciality;
+    }
+
+    public String getConsultationFee() {
+        return ConsultationFee;
+    }
+
+    public void setConsultationFee(String consultationFee) {
+        ConsultationFee = consultationFee;
+    }
+
+    public int getSunday() {
+        return sunday;
+    }
+
+    public void setSunday(int sunday) {
+        this.sunday = sunday;
+    }
+
+    public int getMonday() {
+        return monday;
+    }
+
+    public void setMonday(int monday) {
+        this.monday = monday;
+    }
+
+    public int getTuesday() {
+        return tuesday;
+    }
+
+    public void setTuesday(int tuesday) {
+        this.tuesday = tuesday;
+    }
+
+    public int getWednesday() {
+        return wednesday;
+    }
+
+    public void setWednesday(int wednesday) {
+        this.wednesday = wednesday;
+    }
+
+    public int getThursday() {
+        return thursday;
+    }
+
+    public void setThursday(int thursday) {
+        this.thursday = thursday;
+    }
+
+    public int getFirday() {
+        return firday;
+    }
+
+    public void setFirday(int firday) {
+        this.firday = firday;
+    }
+
+    public int getSaturday() {
+        return saturday;
+    }
+
+    public void setSaturday(int saturday) {
+        this.saturday = saturday;
+    }
+
+    public int getStartHour() {
+        return startHour;
+    }
+
+    public void setStartHour(int startHour) {
+        this.startHour = startHour;
+    }
+
+    public int getStartMinute() {
+        return startMinute;
+    }
+
+    public void setStartMinute(int startMinute) {
+        this.startMinute = startMinute;
+    }
+
+    public int getEndHour() {
+        return endHour;
+    }
+
+    public void setEndHour(int endHour) {
+        this.endHour = endHour;
+    }
+
+    public int getEndMinute() {
+        return endMinute;
+    }
+
+    public void setEndMinute(int endMinute) {
+        this.endMinute = endMinute;
+    }
+
+    public int getOnlineConsult() {
+        return onlineConsult;
+    }
+
+    public void setOnlineConsult(int onlineConsult) {
+        this.onlineConsult = onlineConsult;
+    }
+
+    public int getHomeVisit() {
+        return homeVisit;
+    }
+
+    public void setHomeVisit(int homeVisit) {
+        this.homeVisit = homeVisit;
+    }
+
+    public int getOfficeVisit() {
+        return officeVisit;
+    }
+
+    public void setOfficeVisit(int officeVisit) {
+        this.officeVisit = officeVisit;
+    }
+
+    public int getClinic() {
+        return clinic;
+    }
+
+    public void setClinic(int clinic) {
+        this.clinic = clinic;
     }
 }
