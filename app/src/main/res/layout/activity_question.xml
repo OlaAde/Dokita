@@ -5,19 +5,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="5dp"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
     tools:context="com.upload.adeogo.dokita.activities.QuestionActivity">
-
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <ListView
             android:id="@+id/questionListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="90"
-            android:stackFromBottom="false"
+            android:stackFromBottom="true"
             android:divider="@android:color/transparent"
             android:transcriptMode="alwaysScroll"
             tools:listitem="@layout/item_question"/>
@@ -33,8 +35,9 @@
             android:layout_alignParentStart="true"
             android:orientation="horizontal">
 
-
             <ImageView
+                android:clickable="true"
+                android:focusable="true"
                 android:layout_gravity="center_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -48,26 +51,22 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1" />
 
-            <Button
-                android:background="@drawable/curved_button_background"
+            <ImageView
+                android:clickable="true"
+                android:focusable="true"
+                app:srcCompat="@drawable/ic_send_black_24dp"
                 android:id="@+id/questionSendButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
+                android:layout_gravity="center_vertical"
                 android:enabled="false"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
                 android:text="@string/send_button_label"
-                android:textStyle="bold"
-
                 android:layout_marginRight="@dimen/activity_horizontal_margin"/>
 
-
-
         </LinearLayout>
-
     </LinearLayout>
-
 
     <TextView
         android:layout_width="match_parent"
@@ -86,7 +85,5 @@
         android:visibility="gone"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
         android:gravity="center"/>
-
-
 
 </RelativeLayout>

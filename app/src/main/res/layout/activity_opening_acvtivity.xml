@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/doctor"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
     tools:context="com.upload.adeogo.dokita.activities.OpeningAcvtivity">
 
 
@@ -44,6 +46,7 @@
         android:id="@+id/name_rl"
         android:layout_above="@+id/speciality_rl">
         <EditText
+
             android:fontFamily="@font/shree"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -51,7 +54,7 @@
             android:singleLine="true"
             android:background="@drawable/rounded_edittext"
             android:textColorHint="#b2000000"
-            android:hint="Chose Name"
+            android:hint="Choose Name"
             android:textSize="16sp"
             android:id="@+id/name_tv"
             android:layout_alignParentLeft="true"
@@ -91,7 +94,7 @@
             android:gravity="center"
             android:textSize="16sp"
             android:id="@+id/speciality_tv"
-            android:hint="Choose a speciality" />
+            android:hint="Choose speciality" />
 
         <ImageView
             android:paddingRight="5dp"
@@ -116,8 +119,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_margin="10dp"
+
         android:id="@+id/city_rl"
         android:layout_above="@+id/button_layout">
 

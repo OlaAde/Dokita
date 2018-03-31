@@ -31,6 +31,7 @@ import com.upload.adeogo.dokita.adapters.QuestionAdapter;
 import com.upload.adeogo.dokita.models.ChatHead;
 import com.upload.adeogo.dokita.models.Notification;
 import com.upload.adeogo.dokita.models.Question;
+import com.upload.adeogo.dokita.utils.Constants;
 import com.upload.adeogo.dokita.utils.NetworkUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -57,16 +58,15 @@ public class QuestionActivity extends AppCompatActivity {
     private ListView mQuestionListView;
 
     private EditText mQuestionEditText;
-    private Button mSendButton;
     private TextView mNoInternetTextView;
     private TextView mNoQuestionTextView;
-    private ImageView mLinkImageView;
+    private ImageView mLinkImageView, mSendImage;
     private LinearLayout mSendLinearLayout;
 
     private FirebaseDatabase mFirebaseDatabase;
     private StorageReference mChatPhotosStorageReference;
     private FirebaseStorage mFirebaseStorage;
-    private DatabaseReference mSelfDatabaseReference, mPictureRef, mDoctorDatabaseReference, mSelfChatHeadDatabaseReference, mDoctorChatHeadDatabaseReference;
+    private DatabaseReference mSelfDoctorDatabaseReference, mPictureRef, mDoctorDatabaseReference, mSelfDoctorChatHeadDatabaseReference, mDoctorChatHeadDatabaseReference;
 
     private ChildEventListener mChildEventListener, mPhotoChildEventListener;
     private FirebaseAuth mFirebaseAuth;
@@ -94,14 +94,16 @@ public class QuestionActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mSendLinearLayout = (LinearLayout) findViewById(R.id.questionLinearLayout);
-        mNoInternetTextView = (TextView) findViewById(R.id.questionNoInternetTextView);
-        mNoQuestionTextView = (TextView) findViewById(R.id.questionNoQuestionsTextView);
-        mQuestionListView = (ListView) findViewById(R.id.questionListView);
+        mSendLinearLayout = findViewById(R.id.questionLinearLayout);
+        mNoInternetTextView = findViewById(R.id.questionNoInternetTextView);
+        mNoQuestionTextView = findViewById(R.id.questionNoQuestionsTextView);
+        mQuestionListView = findViewById(R.id.questionListView);
         mLinkImageView = findViewById(R.id.linkImageView);
 
-        mQuestionEditText = (EditText) findViewById(R.id.questionMessageEditText);
-        mSendButton = (Button) findViewById(R.id.questionSendButton);
+        mQuestionEditText = findViewById(R.id.questionMessageEditText);
+        mSendImage = findViewById(R.id.questionSendButton);
+
+
 
         Intent intent = getIntent();
         mDoctorName = intent.getStringExtra("doctor_name");
@@ -132,21 +134,22 @@ public class QuestionActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // User is signed in
+                    // PatientData is signed in
                     userId = user.getUid();
                     mUsername = user.getDisplayName();
-                    mSelfDatabaseReference = mFirebaseDatabase.getReference().child("users").child(userId).child("questions").child(mDoctorId);
-                    mSelfChatHeadDatabaseReference = mFirebaseDatabase.getReference().child("users").child(userId).child("questions").child("chat_head").child(mDoctorId);
 
-                    mDoctorChatHeadDatabaseReference = mFirebaseDatabase.getReference().child("new_doctors").child(mDoctorId).child("questions").child("chat_head").child(userId);
+                    mSelfDoctorDatabaseReference = mFirebaseDatabase.getReference().child("users").child(userId).child("questions").child("doctors").child(mDoctorId);
+                    mSelfDoctorChatHeadDatabaseReference = mFirebaseDatabase.getReference().child("users").child(userId).child("questions").child("chat_head").child("doctors").child(mDoctorId);
 
-                    mDoctorDatabaseReference = mFirebaseDatabase.getReference().child("new_doctors").child(mDoctorId).child("questions").child(userId);
+                    mDoctorChatHeadDatabaseReference = mFirebaseDatabase.getReference().child("new_doctors").child(mDoctorId).child("questions").child("chat_head").child("clients").child(userId);
+
+                    mDoctorDatabaseReference = mFirebaseDatabase.getReference().child("new_doctors").child(mDoctorId).child("questions").child("clients").child(userId);
                     mPictureRef = mFirebaseDatabase.getReference().child("users").child(userId);
 
-                    mChatPhotosStorageReference = mFirebaseStorage.getReference().child("doctors").child("clients").child("chat_photos");
+                    mChatPhotosStorageReference = mFirebaseStorage.getReference().child("clients").child("doctors").child("chat_photos");
                     onSignedInInitialize(user.getDisplayName());
                 } else {
-                    // User is signed out
+                    // PatientData is signed out
                     onSignedOutCleanup();
                     startActivity(new Intent(QuestionActivity.this, LoginActivity.class));
                 }
@@ -159,15 +162,16 @@ public class QuestionActivity extends AppCompatActivity {
 
         mQuestionEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void beforeTextChanged (CharSequence charSequence, int i, int i1, int i2) {
+
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void onTextChanged (CharSequence charSequence, int i, int i1, int i2) {
                 if (charSequence.toString().trim().length() > 0) {
-                    mSendButton.setEnabled(true);
+                    mSendImage.setEnabled(true);
                 } else {
-                    mSendButton.setEnabled(false);
+                    mSendImage.setEnabled(false);
                 }
             }
 
@@ -182,20 +186,21 @@ public class QuestionActivity extends AppCompatActivity {
             noInternet();
         }
 
-//        mAdapter.swapData(mQuestionList);
+        // mAdapter.swapData(mQuestionList);
 
         // Send button sends a message and clears the EditText
-        mSendButton.setOnClickListener(new View.OnClickListener() {
+        mSendImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!TextUtils.isEmpty(mQuestionEditText.getText().toString())){
+                if (!TextUtils.isEmpty(mQuestionEditText.getText().toString())) {
+
                     Question question = new Question(mQuestionEditText.getText().toString().trim(), mUsername, 0, null);
-                    mSelfDatabaseReference.push().setValue(question);
+                    mSelfDoctorDatabaseReference.push().setValue(question);
 
 
                     long unixTimeStamp = NetworkUtils.getUnixTime();
                     ChatHead selfChatHead = new ChatHead(mDoctorId, mDoctorName, mPictureUrl, unixTimeStamp, 0);
-                    mSelfChatHeadDatabaseReference.setValue(selfChatHead);
+                    mSelfDoctorChatHeadDatabaseReference.setValue(selfChatHead);
 
                     ChatHead doctorChatHead = new ChatHead(userId, mUsername, mSelfPictureUrl, unixTimeStamp, 0);
 
@@ -210,13 +215,22 @@ public class QuestionActivity extends AppCompatActivity {
                     notification.setUid(userId);
                     notification.setUsername(mUsername);
                     notification.setType("0");
+                    notification.setWhich(Integer.toString(0));
+                    if (mPictureUrl!= null){
+                        notification.setImageUrl(mPictureUrl);
+                    }else {
+                        mPictureUrl = Constants.mPlaceHolder;
+                        notification.setImageUrl(mPictureUrl);
+                    }
 
-                    FirebaseDatabase.getInstance().getReference(mDoctorId).push().setValue(notification);
+
+                    FirebaseDatabase.getInstance().getReference("notifications").child(mDoctorId).push().setValue(notification);
 
                     FirebaseMessaging.getInstance().subscribeToTopic(userId);
                     // Clear input box
                     mQuestionEditText.setText("");
-                }else {
+
+                } else {
                     Toast.makeText(QuestionActivity.this, "Enter a question", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -252,7 +266,7 @@ public class QuestionActivity extends AppCompatActivity {
                 public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
                 public void onCancelled(DatabaseError databaseError) {}
             };
-            mSelfDatabaseReference.addChildEventListener(mChildEventListener);
+            mSelfDoctorDatabaseReference.addChildEventListener(mChildEventListener);
         }
 
         if (mPhotoChildEventListener == null) {
@@ -276,8 +290,13 @@ public class QuestionActivity extends AppCompatActivity {
 
     private void detachDatabaseReadListener() {
         if (mChildEventListener != null) {
-            mSelfDatabaseReference.removeEventListener(mChildEventListener);
+            mSelfDoctorDatabaseReference.removeEventListener(mChildEventListener);
             mChildEventListener = null;
+        }
+
+        if (mPhotoChildEventListener != null) {
+            mPictureRef.removeEventListener(mPhotoChildEventListener);
+            mPhotoChildEventListener = null;
         }
     }
 
@@ -310,12 +329,12 @@ public class QuestionActivity extends AppCompatActivity {
                             Uri downloadUrl = taskSnapshot.getDownloadUrl();
 
                             Question question = new Question(null, mUsername, 0, downloadUrl.toString());
-                            mSelfDatabaseReference.push().setValue(question);
+                            mSelfDoctorDatabaseReference.push().setValue(question);
 
 
                             long unixTimeStamp = NetworkUtils.getUnixTime();
                             ChatHead selfChatHead = new ChatHead(mDoctorId, mDoctorName, mPictureUrl, unixTimeStamp, 0);
-                            mSelfChatHeadDatabaseReference.setValue(selfChatHead);
+                            mSelfDoctorChatHeadDatabaseReference.setValue(selfChatHead);
 
                             ChatHead doctorChatHead = new ChatHead(userId, mUsername, mSelfPictureUrl, unixTimeStamp, 0);
 
@@ -329,8 +348,15 @@ public class QuestionActivity extends AppCompatActivity {
                             notification.setUid(userId);
                             notification.setUsername(mUsername);
                             notification.setType("0");
+                            notification.setWhich(Integer.toString(0));
+                            if (mPictureUrl!= null){
+                                notification.setImageUrl(mPictureUrl);
+                            }else {
+                                mPictureUrl = Constants.mPlaceHolder;
+                                notification.setImageUrl(mPictureUrl);
+                            }
 
-                            FirebaseDatabase.getInstance().getReference(mDoctorId).push().setValue(notification);
+                            FirebaseDatabase.getInstance().getReference("notifications").child(mDoctorId).push().setValue(notification);
 
                             FirebaseMessaging.getInstance().subscribeToTopic(userId);
 //                            // Set the download URL to the message box, so that the user can send it to the database
@@ -362,6 +388,8 @@ public class QuestionActivity extends AppCompatActivity {
             mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
         }
         detachDatabaseReadListener();
+
+        mAdapter.clear();
     }
 
     private void noInternet(){

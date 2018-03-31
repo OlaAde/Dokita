@@ -8,20 +8,26 @@
     tools:context="com.upload.adeogo.dokita.activities.SearchActivity">
 
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center" />
 
-        <TextView
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/no_result_search"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:text="No professional matches your search"
         android:gravity="center"
-        android:id="@+id/no_result_search"
-        android:textSize="15sp"/>
+        android:text="No Results for your search!"
+        android:textSize="15sp" />
 
-        <android.support.v7.widget.RecyclerView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/search_rv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/search_rv">
+        android:layout_height="match_parent">
 
-</android.support.v7.widget.RecyclerView>
+    </android.support.v7.widget.RecyclerView>
 </LinearLayout>

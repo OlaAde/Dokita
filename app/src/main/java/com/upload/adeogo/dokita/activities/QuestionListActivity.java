@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,6 +20,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.upload.adeogo.dokita.R;
 import com.upload.adeogo.dokita.adapters.ListAdapter;
 import com.upload.adeogo.dokita.models.ChatHead;
@@ -36,12 +39,13 @@ public class QuestionListActivity extends AppCompatActivity implements ListAdapt
     private ListAdapter mListAdapter;
     private LinearLayoutManager mManager;
     private RecyclerView mRecyclerView;
+    private TextView mNoMessagesTextView;
 
     public static final int RC_SIGN_IN = 1;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mChatDatabaseReference;
+    private Query mChatQuery;
     private DatabaseReference mPictureDatabaseReference;
     private ChildEventListener mChildEventListener;
 
@@ -57,13 +61,15 @@ public class QuestionListActivity extends AppCompatActivity implements ListAdapt
         setContentView(R.layout.activity_question_list);
         mRecyclerView = (RecyclerView) findViewById(R.id.messages_recycler_view);
         mProgressBar = findViewById(R.id.progressBar);
+        mNoMessagesTextView = findViewById(R.id.noChats);
 
         mListAdapter = new ListAdapter(QuestionListActivity.this, this);
         mManager = new LinearLayoutManager(this);
 
         mListAdapter.swapData(mChatList);
 
-
+        mManager.setReverseLayout(true);
+        mManager.setStackFromEnd(true);
         mRecyclerView.setAdapter(mListAdapter);
         mRecyclerView.setLayoutManager(mManager);
 
@@ -75,12 +81,12 @@ public class QuestionListActivity extends AppCompatActivity implements ListAdapt
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // User is signed in
+                    // PatientData is signed in
                     userId = user.getUid();
-                    mChatDatabaseReference = mFirebaseDatabase.getReference().child("users").child(userId).child("questions").child("chat_head");
+                    mChatQuery = mFirebaseDatabase.getReference().child("users").child(userId).child("questions").child("chat_head").child("doctors").orderByChild("unixTime");
                     onSignedInInitialize(user.getDisplayName());
                 } else {
-                    // User is signed out
+                    // PatientData is signed out
                     onSignedOutCleanup();
                     startActivity(new Intent(QuestionListActivity.this, LoginActivity.class));
                 }
@@ -101,6 +107,28 @@ public class QuestionListActivity extends AppCompatActivity implements ListAdapt
     }
 
     private void attachDatabaseReadListener() {
+
+        mChatQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    mProgressBar.setVisibility(View.GONE);
+                    mRecyclerView.setVisibility(View.VISIBLE);
+                    mNoMessagesTextView.setVisibility(View.GONE);
+                }else {
+                    mProgressBar.setVisibility(View.GONE);
+                    mRecyclerView.setVisibility(View.GONE);
+                    mNoMessagesTextView.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
         if (mChildEventListener == null) {
             mChildEventListener = new ChildEventListener() {
                 @Override
@@ -128,13 +156,13 @@ public class QuestionListActivity extends AppCompatActivity implements ListAdapt
                 public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
                 public void onCancelled(DatabaseError databaseError) {}
             };
-            mChatDatabaseReference.addChildEventListener(mChildEventListener);
+            mChatQuery.addChildEventListener(mChildEventListener);
         }
     }
 
     private void detachDatabaseReadListener() {
         if (mChildEventListener != null) {
-            mChatDatabaseReference.removeEventListener(mChildEventListener);
+            mChatQuery.removeEventListener(mChildEventListener);
             mChildEventListener = null;
         }
     }

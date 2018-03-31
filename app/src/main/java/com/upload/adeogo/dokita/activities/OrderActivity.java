@@ -17,6 +17,7 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -46,16 +47,18 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import es.dmoral.toasty.Toasty;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class OrderActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
 
-    private TextView mBookAppointmentTextView, mNameTextView, mSpecialityTextView, mMessageTextView;
+    private TextView mNameTextView, mSpecialityTextView;
     private TextView mSundayDateTextView, mMondayDateTextView, mTuesdayDateTextView, mWednesdayDateTextView, mThursdayDateTextView, mFridayDateTextView, mSaturdayDateTextView;
 
     private ImageView mTimeLabelTextView;
@@ -64,6 +67,7 @@ public class OrderActivity extends AppCompatActivity implements TimePickerDialog
     private DatePickerDialog mDatePickerDialog;
 
     private CircleImageView mProfileImageView;
+    private Button mBookAppointmentButton, mMessageButton;
 
 
     private int mDay = -1, mMonth, mYear, timeSetter, startHour, startMinute, endHour, endMinute, sunday = 0, monday = 0, tuesday = 0, wednesday = 0, thursday = 0, friday = 0, saturday = 0;
@@ -103,9 +107,9 @@ public class OrderActivity extends AppCompatActivity implements TimePickerDialog
         mFridayDateTextView = findViewById(R.id.friday);
         mSaturdayDateTextView = findViewById(R.id.saturday);
 
-        mMessageTextView = findViewById(R.id.message);
+        mMessageButton = findViewById(R.id.message);
 
-        mBookAppointmentTextView = (TextView) findViewById(R.id.book_appointment);
+        mBookAppointmentButton = (Button) findViewById(R.id.book_appointment);
         mNameTextView = (TextView) findViewById(R.id.profile_name);
         mSpecialityTextView = (TextView) findViewById(R.id.profile_speciality);
         mTimeLabelTextView = findViewById(R.id.pickTimeLabel);
@@ -119,7 +123,7 @@ public class OrderActivity extends AppCompatActivity implements TimePickerDialog
         Typeface italicsTypeface = Typeface.createFromAsset(getAssets(), "font/open_sans_light_italic.ttf");
         mNameTextView.setTypeface(semiBoldTypeface);
         mSpecialityTextView.setTypeface(italicsTypeface);
-        mBookAppointmentTextView.setTypeface(semiBoldTypeface);
+        mBookAppointmentButton.setTypeface(semiBoldTypeface);
 
         Intent intent = getIntent();
         doctor_id = intent.getStringExtra("doctor_id");
@@ -151,7 +155,7 @@ public class OrderActivity extends AppCompatActivity implements TimePickerDialog
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // User is signed in
+                    // PatientData is signed in
                     userId = user.getUid();
                     mUsername = user.getDisplayName();
                     mClientName = mUsername;
@@ -159,7 +163,7 @@ public class OrderActivity extends AppCompatActivity implements TimePickerDialog
                     mSelfProfileDatabase = mFirebaseDatabase.getReference().child("users/" + userId);
                     onSignedInInitialize(user.getDisplayName());
                 } else {
-                    // User is signed out
+                    // PatientData is signed out
                     onSignedOutCleanup();
                     startActivity(new Intent(OrderActivity.this, LoginActivity.class));
                 }
@@ -182,7 +186,7 @@ public class OrderActivity extends AppCompatActivity implements TimePickerDialog
 
         updateDateColor();
 
-        mBookAppointmentTextView.setOnClickListener(new View.OnClickListener() {
+        mBookAppointmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mTimeString == null){
@@ -269,7 +273,7 @@ public class OrderActivity extends AppCompatActivity implements TimePickerDialog
             }
         });
 
-        mMessageTextView.setOnClickListener(new View.OnClickListener() {
+        mMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(OrderActivity.this, QuestionActivity.class);
@@ -307,7 +311,12 @@ public class OrderActivity extends AppCompatActivity implements TimePickerDialog
                     IdGenerator idGenerator = new IdGenerator(new Random());
                     mAppointmentKey = idGenerator.nextId();
 
-                    Toast.makeText(OrderActivity.this, "Here " + mSelfPhotoUrl, Toast.LENGTH_SHORT).show();
+                    Calendar calendar  = Calendar.getInstance();
+
+                    mYear = calendar.get(Calendar.MONTH);
+                    mDay = calendar.get(Calendar.DATE);
+                    mMonth = calendar.get(Calendar.MONTH);
+
                     mDatabaseReference.child(mAppointmentKey).setValue(new Appointment(userId, doctor_id, mTimeString, mYear, mMonth, mDay, mDoctorPhoneNumber, mClientPhoneNumber, mDoctorName, mClientName, "The General Hospital", 0, mMessage, mSelfPhotoUrl));
                     mSelfDatabaseReference.child(mAppointmentKey).setValue(new Appointment(userId,doctor_id, mTimeString, mYear, mMonth, mDay, mDoctorPhoneNumber,mClientPhoneNumber, mDoctorName, mClientName, "The General Hospital", 0, mMessage, mSelfPhotoUrl));
 
@@ -322,7 +331,7 @@ public class OrderActivity extends AppCompatActivity implements TimePickerDialog
 
                     FirebaseMessaging.getInstance().subscribeToTopic(userId);
 
-                    Toast.makeText(OrderActivity.this, "Appointment Request Sent!", Toast.LENGTH_SHORT).show();
+                    Toasty.success(OrderActivity.this, "Appointment Request Sent!", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(OrderActivity.this, ProfileActivity.class);
                     startActivity(intent);
                 } else {
@@ -399,8 +408,6 @@ public class OrderActivity extends AppCompatActivity implements TimePickerDialog
         }
     }
 
-
-
     private void setAlarm(){
 
         Intent myIntent = new Intent(this , NotifyService.class);
@@ -476,7 +483,6 @@ public class OrderActivity extends AppCompatActivity implements TimePickerDialog
             mSaturdayDateTextView.setBackground(OrderActivity.this.getResources().getDrawable(R.drawable.curved_button_background));
         }
     }
-
 
     @Override
     public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {

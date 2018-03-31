@@ -6,7 +6,9 @@
     android:layout_height="match_parent"
     android:background="@drawable/patients_login_bkg_img"
     android:id="@+id/rootLayout"
-    tools:context=".activities.LoginActivity">
+    tools:context=".activities.LoginActivity"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
 
 
     <LinearLayout
@@ -84,6 +86,7 @@
                 app:met_primaryColor="@android:color/white"/>
 
             <TextView
+                android:paddingRight="5dp"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
                 android:fontFamily="@font/shree"

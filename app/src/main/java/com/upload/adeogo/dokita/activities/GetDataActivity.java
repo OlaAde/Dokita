@@ -118,18 +118,19 @@ public class GetDataActivity extends AppCompatActivity implements ListaAdapter.L
             mSpecitlityList.add("Gen Health Professional");
             mSpecitlityList.add("Paediatrician");
             mSpecitlityList.add("Dentist");
-            mSpecitlityList.add("Ophthalmologist");
             mSpecitlityList.add("Dermatologist");
             mSpecitlityList.add("Gynecologist");
-            mSpecitlityList.add("Hepatologist");
+            mSpecitlityList.add("Herpetologist");
             mSpecitlityList.add("Cardiologist");
             mSpecitlityList.add("Diabetologist");
-            mSpecitlityList.add("Ear nose throat Doctor");
+            mSpecitlityList.add("Dietician");
+            mSpecitlityList.add("General Physician");
             mSpecitlityList.add("General Surgeon");
             mSpecitlityList.add("Geneticist");
-            mSpecitlityList.add( "Gynecologist");
-            mSpecitlityList.add( "General Physiciain");
+            mSpecitlityList.add( "Nutritionist");
+            mSpecitlityList.add( "Veterinarian");
             mSpecitlityList.add( "Oncologist");
+            mSpecitlityList.add( "Ophthalmologist");
             mSpecitlityList.add( "Plastic Surgeon");
 
             mList = mSpecitlityList;

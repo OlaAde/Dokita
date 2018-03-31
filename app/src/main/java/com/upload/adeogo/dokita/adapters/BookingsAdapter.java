@@ -46,13 +46,18 @@ public class BookingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         public final TextView mDateTextView;
         public final TextView mLocationTextView;
         public final LinearLayout mCancelLinearLayout;
+        public final View mBarrier1, mBarrier2;
 
         public BookingsAdapterViewHolder(View itemView) {
             super(itemView);
+
             mNameTextView = (TextView) itemView.findViewById(R.id.card_DoctorName);
             mDateTextView = (TextView) itemView.findViewById(R.id.card_date_tv);
             mLocationTextView = (TextView) itemView.findViewById(R.id.card_DoctorPlace);
             mCancelLinearLayout = (LinearLayout) itemView.findViewById(R.id.cancel_ll);
+            mBarrier1 = (View) itemView.findViewById(R.id.barrier1);
+            mBarrier2 = (View) itemView.findViewById(R.id.barrier2);
+
 
             mCancelLinearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -94,6 +99,21 @@ public class BookingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             Location = appointment.getLocation();
             status = appointment.getStatus();
 
+            if (status == 0){
+                ((BookingsAdapterViewHolder) holder).mBarrier1.setBackgroundColor(mContext.getResources().getColor(R.color.colorPending));
+                ((BookingsAdapterViewHolder) holder).mBarrier2.setBackgroundColor(mContext.getResources().getColor(R.color.colorPending));
+            }else if (status == 1){
+                ((BookingsAdapterViewHolder) holder).mBarrier1.setBackgroundColor(mContext.getResources().getColor(R.color.colorApproved));
+                ((BookingsAdapterViewHolder) holder).mBarrier2.setBackgroundColor(mContext.getResources().getColor(R.color.colorApproved));
+            }else if (status == 2){
+                ((BookingsAdapterViewHolder) holder).mBarrier1.setBackgroundColor(mContext.getResources().getColor(R.color.colorCancelled));
+                ((BookingsAdapterViewHolder) holder).mBarrier2.setBackgroundColor(mContext.getResources().getColor(R.color.colorCancelled));
+
+            }else if (status == 3){
+                ((BookingsAdapterViewHolder) holder).mBarrier1.setBackgroundColor(mContext.getResources().getColor(R.color.colorPrimary));
+                ((BookingsAdapterViewHolder) holder).mBarrier2.setBackgroundColor(mContext.getResources().getColor(R.color.colorPrimary));
+            }
+
             Calendar calendar = Calendar.getInstance();
 
             int thisYear = calendar.get(Calendar.YEAR);
@@ -108,11 +128,15 @@ public class BookingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 Date = "Tomorrow, " + appointment.getTime();
             }else
                 Date = appointment.getTime();
+
+            ((BookingsAdapterViewHolder) holder).mNameTextView.setText(Name);
+//        ((BookingsAdapterViewHolder) holder).mLocationTextView.setText(Date);
+            ((BookingsAdapterViewHolder) holder).mDateTextView.setText(Date);
         }
 
-        ((BookingsAdapterViewHolder) holder).mNameTextView.setText(Name);
-        ((BookingsAdapterViewHolder) holder).mLocationTextView.setText(Date);
-        ((BookingsAdapterViewHolder) holder).mDateTextView.setText(mLabelList.get(status));
+
+
+
     }
 
 

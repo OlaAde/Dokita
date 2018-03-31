@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     android:background="@drawable/patients_login_bkg_img"
     android:id="@+id/rootLayout"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
     tools:context=".activities.LoginActivity">
 
 
@@ -90,7 +92,7 @@
                 android:gravity="center_horizontal|right"
                 android:layout_gravity="center_horizontal"
                 android:textColor="@android:color/white"
-                android:text="forgot password?"
+                android:text="forgot password? "
                 android:id="@+id/txt_view_pwd"
                 android:layout_height="wrap_content"
                 android:textStyle="italic"/>

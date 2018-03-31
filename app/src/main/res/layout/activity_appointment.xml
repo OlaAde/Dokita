@@ -1,113 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
+<android.support.design.widget.CoordinatorLayout android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.upload.adeogo.dokita.activities.AppointmentActivity">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/mainLayout"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical"
+        tools:context="com.upload.adeogo.dokita.activities.AppointmentActivity">
 
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ProgressBar
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_gravity="center"/>
-
-            <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/doctorImageView"
-            android:layout_margin="25dp"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_gravity="center_horizontal"
-            tools:src="@drawable/doctor1"/>
-        </FrameLayout>
-
-
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:id="@+id/messageTextView"
-            android:gravity="center"
-            android:layout_gravity="center"/>
-
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:padding="5dp"
-            app:cardCornerRadius="2dp">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:descendantFocusability="beforeDescendants"
+            android:focusableInTouchMode="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:weightSum="10"
+                android:paddingBottom="5dp"
+                android:descendantFocusability="beforeDescendants"
+                android:focusableInTouchMode="true">
 
-                <TextView
-                    android:id="@+id/doctorNameTextVIew"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    tools:text="Tolulope Dipo"/>
+                <android.support.v7.widget.CardView
+                    android:id="@+id/searchCard"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
 
-                <TextView
-                    android:id="@+id/dateTextView"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:gravity="center_horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:text="5/5/17"/>
+                    android:hint="@string/search_for_doctor"
+                    android:paddingLeft="5dp"
+                    app:cardCornerRadius="10dp"
+                    app:layout_constraintEnd_toStartOf="@+id/button3"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_weight="9">
+
+                    <EditText
+                        android:gravity="center"
+                        android:textSize="15sp"
+                        android:background="@color/white"
+                        android:id="@+id/searchView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:hint="@string/search_for_doctor"
+                        android:imeOptions="actionDone"
+                        android:singleLine="true"/>
+                </android.support.v7.widget.CardView>
+
+
+                <android.support.v7.widget.CardView
+                    android:layout_weight="1"
+                    app:cardCornerRadius="20dp"
+                    android:background="@drawable/curved_button_background_search"
+                    android:id="@+id/button3"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Button"
+                    app:srcCompat="@drawable/ic_search_black_24dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" >
+
+                    <ImageView
+                        android:padding="5dp"
+                        android:background="@drawable/curved_button_background_search"
+                        android:id="@+id/search_image_button"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:text="Button"
+                        app:srcCompat="@drawable/ic_search_black_24dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </android.support.v7.widget.CardView>
+
 
             </LinearLayout>
 
+            <com.synnapps.carouselview.CarouselView
+                android:layout_marginTop="10dp"
+                android:id="@+id/carouselView"
+                android:layout_width="match_parent"
+                android:layout_height="230dp"
+                app:fillColor="#FFFFFFFF"
+                app:pageColor="#00000000"
+                app:radius="6dp"
+                app:slideInterval="3000"
+                app:strokeColor="#FF777777"
+                app:strokeWidth="1dp"/>
 
 
 
-        </android.support.v7.widget.CardView>
+            <TextView
+                android:background="#41818181"
+                android:gravity="center"
+                android:paddingBottom="5dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="News &amp; Health Tips"
+                android:textSize="18sp"/>
 
-       <LinearLayout
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:orientation="horizontal"
-           android:weightSum="2">
-           <ImageView
-               android:layout_weight="1"
-               android:layout_gravity="center_horizontal"
-               android:id="@+id/dialImageView"
-               android:paddingTop="10dp"
-               android:layout_width="80dp"
-               android:layout_height="80dp"
-               android:src="@drawable/ic_phone_round" />
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/progressBar"
+                android:layout_gravity="center"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/newsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/recyclerView2" />
+
+            <TextView
+                android:layout_marginBottom="3dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="News Feed Powered by News Api"
+                android:id="@+id/poweredClick"/>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+    <com.github.ag.floatingactionmenu.OptionsFabLayout
+        android:id="@+id/fab_l"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        custom:color="@color/colorAccent"
+        custom:options_color="@color/green_fab"
+        custom:options_menu="@menu/fabs"
+        custom:src="@drawable/ic_more_vert_black_24dp" />
 
 
-
-           <ImageView
-               android:layout_weight="1"
-               android:layout_gravity="center_horizontal"
-               android:id="@+id/chatImageView"
-               android:paddingTop="10dp"
-               android:layout_width="80dp"
-               android:layout_height="80dp"
-               app:srcCompat="@drawable/ic_message_black" />
-       </LinearLayout>
-
-
-
-
-    </LinearLayout>
-
-
-</ScrollView>
+</android.support.design.widget.CoordinatorLayout>

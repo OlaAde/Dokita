@@ -97,12 +97,12 @@ public class VitalsActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // User is signed in
+                    // PatientData is signed in
                     userId = user.getUid();
                     mDatabaseReference = mFirebaseDatabase.getReference().child("users/" + userId + "/vitals");
                     onSignedInInitialize(user.getDisplayName());
                 } else {
-                    // User is signed out
+                    // PatientData is signed out
                     onSignedOutCleanup();
                     startActivity(new Intent(VitalsActivity.this, LoginActivity.class));
                 }

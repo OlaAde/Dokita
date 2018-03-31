@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -29,11 +30,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String UID = "uid";
     private static final String TEXT = "text";
     private static final String TYPE = "type";
+    private static final String WHICH = "which";
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
         if (remoteMessage.getData().size() > 0)
+
         {
             Map<String, String> data = remoteMessage.getData();
 
@@ -41,6 +44,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String uid = data.get(UID);
             String text = data.get(TEXT);
             String type = data.get(TYPE);
+            String imageUrl = data.get(IMAGEURL);
+            String which = data.get(WHICH);
 
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
             mBuilder.setSmallIcon(R.drawable.icon_client);
@@ -56,6 +61,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             if (TextUtils.equals(type, "0")){
                 resultIntent = new Intent(this, QuestionActivity.class);
+                resultIntent.putExtra("which", Integer.parseInt(which));
+                resultIntent.putExtra("pictureUrl", imageUrl);
                 resultIntent.putExtra("doctor_id", uid);
                 resultIntent.putExtra("doctor_name", username);
             } else if (TextUtils.equals(type, "1")){

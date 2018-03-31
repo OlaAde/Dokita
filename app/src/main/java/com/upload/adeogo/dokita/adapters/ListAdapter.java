@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.upload.adeogo.dokita.R;
 import com.upload.adeogo.dokita.models.ChatHead;
+import com.upload.adeogo.dokita.utils.NetworkUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -104,19 +105,25 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             c.setTimeInMillis(unixTime);//set your saved timestamp
             String that_day=String.format("%te %B %tY",c,c,c); //this will convert timestamp into format like 22 February 2012
-            DateFormat df;
 
-            if (TextUtils.equals(cur_day, that_day)){
-               df = new SimpleDateFormat("HH:mm:ss");
-            }else {
-                df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+            Calendar timeToCheck = Calendar.getInstance();
+            timeToCheck.setTimeInMillis(unixTime);
+
+            if(c.get(Calendar.YEAR) == timeToCheck.get(Calendar.YEAR)) {
+                if(c.get(Calendar.DAY_OF_YEAR) == timeToCheck.get(Calendar.DAY_OF_YEAR)){
+                    String nowDate = NetworkUtils.getTimeFromUnix(chatHead.getUnixTime());
+                    ((ListAdapterViewHolder) holder).mDateTextView.setText(nowDate);
+                } else {
+                    String nowDate = NetworkUtils.convertUnix(chatHead.getUnixTime());
+                    ((ListAdapterViewHolder) holder).mDateTextView.setText(nowDate);
+                }
+
             }
 
             java.util.Date time = new java.util.Date((long)unixTime);
-            String shownDate = df.format(time);
-            ((ListAdapterViewHolder) holder).mDateTextView.setText(shownDate);
 
             ((ListAdapterViewHolder) holder).mNameTextView.setText(Title);
+
         }
 
 

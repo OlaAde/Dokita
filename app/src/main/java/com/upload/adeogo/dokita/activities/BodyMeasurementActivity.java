@@ -110,12 +110,12 @@ public class BodyMeasurementActivity extends AppCompatActivity implements Number
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // User is signed in
+                    // PatientData is signed in
                     userId = user.getUid();
                     mDatabaseReference = mFirebaseDatabase.getReference().child("users/" +userId + "/body_measurements");
                     onSignedInInitialize(user.getDisplayName());
                 } else {
-                    // User is signed out
+                    // PatientData is signed out
                     onSignedOutCleanup();
                     startActivity(new Intent(BodyMeasurementActivity.this, LoginActivity.class));
                 }

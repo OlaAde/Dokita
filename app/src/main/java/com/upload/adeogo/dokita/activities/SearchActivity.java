@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,6 +60,8 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.S
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mListener;
 
+    private ProgressBar mProgressBar;
+
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -78,6 +81,7 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.S
         getSupportActionBar().setTitle("Search Result");
         mRecyclerView = (RecyclerView) findViewById(R.id.search_rv);
         mNoDataTextView = (TextView) findViewById(R.id.no_result_search);
+        mProgressBar = findViewById(R.id.progressBar);
 
         boolean isConnect = NetworkUtils.isOnline(this);
 
@@ -149,28 +153,40 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.S
         appointmentQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot appointmentSnapshot: dataSnapshot.getChildren()) {
 
+                if(dataSnapshot == null){
+                    mProgressBar.setVisibility(View.GONE);
+                    mNoDataTextView.setVisibility(View.VISIBLE);
+                    mRecyclerView.setVisibility(View.GONE);
+                }else {
+                    mProgressBar.setVisibility(View.GONE);
                     mNoDataTextView.setVisibility(View.GONE);
+                    mRecyclerView.setVisibility(View.VISIBLE);
 
-                    DoctorProfile doctor = appointmentSnapshot.getValue(DoctorProfile.class);
-                    mDoctorList.add(doctor);
-                    mAdapter.swapData(null);
+                    for (DataSnapshot appointmentSnapshot: dataSnapshot.getChildren()) {
+
+
+                        DoctorProfile doctor = appointmentSnapshot.getValue(DoctorProfile.class);
+                        mDoctorList.add(doctor);
+                        mAdapter.swapData(null);
+                        mAdapter.swapData(mDoctorList);
+                    }
                     mAdapter.swapData(mDoctorList);
-                }
-                mAdapter.swapData(mDoctorList);
 
-                if (queryName!=null){
-            iterator(queryName , 0);
+                    if (queryName!=null){
+                        iterator(queryName , 0);
+                    }
+
+                    if (queryCity!=null){
+                        iterator(queryCity, 1);
+                    }
+
+                    if (querySpeciality!=null){
+                        iterator(querySpeciality, 2);
+                    }
+
                 }
 
-                if (queryCity!=null){
-            iterator(queryCity, 1);
-                }
-
-                if (querySpeciality!=null){
-                    iterator(querySpeciality, 2);
-                }
             }
 
             @Override

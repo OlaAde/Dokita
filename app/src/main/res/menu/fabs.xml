@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_profile"
+        android:icon="@drawable/ic_question_answer_black_24dp"
+        android:title="@string/action_profile" />
+
+    <item
+        android:id="@+id/action_cart"
+        android:icon="@drawable/ic_cart"
+        android:title="@string/action_cart" />
+
+    <item
+        android:id="@+id/action_settings"
+        android:icon="@drawable/ic_tune"
+        android:title="@string/action_settings" />
+
+    <item
+        android:id="@+id/action_messages"
+        android:icon="@drawable/ic_question_answer_black_24dp"
+        android:title="@string/action_messages" />
+</menu>

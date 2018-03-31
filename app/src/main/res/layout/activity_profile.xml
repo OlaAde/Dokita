@@ -83,8 +83,8 @@
             android:id="@+id/body_measurements_ll">
 
             <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:src="@drawable/measurements"
                 android:layout_margin="4dp"/>
 
@@ -96,7 +96,7 @@
                 android:id="@+id/body_tv"
                 android:layout_margin="12dp"
                 android:textColor="#000"
-                android:textSize="23sp"/>
+                android:textSize="15sp"/>
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -119,8 +119,8 @@
             android:id="@+id/health_records_ll">
 
             <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:src="@drawable/health_records"
                 android:layout_margin="4dp"/>
 
@@ -132,7 +132,7 @@
                 android:layout_weight="1"
                 android:layout_margin="12dp"
                 android:textColor="#000"
-                android:textSize="23sp"/>
+                android:textSize="15sp"/>
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -155,8 +155,8 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_margin="4dp"
                 android:src="@drawable/results" />
 
@@ -168,7 +168,7 @@
                 android:text="Results"
                 android:id="@+id/results_tv"
                 android:textColor="#000"
-                android:textSize="23sp"/>
+                android:textSize="15sp"/>
 
 
             <ImageView
@@ -192,8 +192,8 @@
             android:id="@+id/vitals_ll">
 
             <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:src="@drawable/monitor"
                 android:layout_margin="4dp"/>
 
@@ -205,7 +205,7 @@
                 android:layout_weight="1"
                 android:layout_margin="12dp"
                 android:textColor="#000"
-                android:textSize="23sp"/>
+                android:textSize="15sp"/>
 
 
             <ImageView
@@ -219,7 +219,8 @@
             android:layout_height="1dp"
             android:background="#84606060"
             android:layout_marginLeft="35dp"
-            android:layout_marginTop="4dp"/>
+            android:layout_marginTop="4dp"
+            android:paddingBottom="10dp"/>
 
     </LinearLayout>
 

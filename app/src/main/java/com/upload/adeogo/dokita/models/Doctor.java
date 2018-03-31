@@ -7,31 +7,32 @@ import java.util.List;
  */
 
 public class Doctor {
-    private String Id;
-    private String Name;
-    private String Email;
     private List<Review> Reviews;
-    private String ImageUrl;
-    private String Speciality;
-    private String PhoneNumber;
-    private String City;
-    private String Country;
+    private String ImageUrl, Speciality, PhoneNumber, City, Country, Email, Name, Id, Status;
     private int Sex;
 
     public Doctor(){}
 
-    public Doctor(int sex, String id, String name, String email, List<Review> reviews, String imageUrl, String speciality, String phoneNumber,
-                  String city, String country){
-        Sex = sex;
-        Id = id;
-        Name = name;
-        Email = email;
+    public Doctor(List<Review> reviews, String imageUrl, String speciality, String phoneNumber, String city, String country, String email, String name, String id, String status, int sex) {
         Reviews = reviews;
         ImageUrl = imageUrl;
         Speciality = speciality;
         PhoneNumber = phoneNumber;
-        Country = country;
         City = city;
+        Country = country;
+        Email = email;
+        Name = name;
+        Id = id;
+        Status = status;
+        Sex = sex;
+    }
+
+    public String getStatus() {
+        return Status;
+    }
+
+    public void setStatus(String status) {
+        Status = status;
     }
 
     public void setSex(int sex) {

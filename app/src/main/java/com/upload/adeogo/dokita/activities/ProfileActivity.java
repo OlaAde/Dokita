@@ -32,6 +32,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.upload.adeogo.dokita.R;
 import com.upload.adeogo.dokita.adapters.BookingsAdapter;
 import com.upload.adeogo.dokita.adapters.FavoriteAdapter;
@@ -178,7 +179,7 @@ public class ProfileActivity extends AppCompatActivity implements BookingsAdapte
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // User is signed in
+                    // PatientData is signed in
                     userId = user.getUid();
 
                     mDatabaseReference = mFirebaseDatabase.getReference().child("users/" + userId + "/appointments");
@@ -191,7 +192,7 @@ public class ProfileActivity extends AppCompatActivity implements BookingsAdapte
 
                     onSignedInInitialize(user.getDisplayName());
                 } else {
-                    // User is signed out
+                    // PatientData is signed out
                     onSignedOutCleanup();
                     startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
                 }
@@ -392,7 +393,7 @@ public class ProfileActivity extends AppCompatActivity implements BookingsAdapte
         mMessage = appointment.getMessage();
         mDoctorId = appointment.getDoctorId();
 
-        Intent intent = new Intent(ProfileActivity.this, AppointmentActivity.class);
+        Intent intent = new Intent(ProfileActivity.this, AppointmentViewActivity.class);
         intent.putExtra("key", mKeyList.get(adapterPosition));
         intent.putExtra("userId", mUserId);
         intent.putExtra("doctorId", mDoctorId);
@@ -495,6 +496,8 @@ public class ProfileActivity extends AppCompatActivity implements BookingsAdapte
                         final android.app.AlertDialog waitingDialog = new SpotsDialog(ProfileActivity.this);
                         waitingDialog.show();
 
+                        FirebaseMessaging.getInstance().unsubscribeFromTopic(userId);
+
                         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
                         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
@@ -545,6 +548,7 @@ public class ProfileActivity extends AppCompatActivity implements BookingsAdapte
             alertDialog.setNegativeButton("Logout", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
+                    FirebaseMessaging.getInstance().unsubscribeFromTopic(userId);
                     mFirebaseAuth.signOut();
                     Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
                     startActivity(intent);

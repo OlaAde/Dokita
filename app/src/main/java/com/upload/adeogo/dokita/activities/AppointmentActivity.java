@@ -1,192 +1,221 @@
 package com.upload.adeogo.dokita.activities;
 
 import android.content.Intent;
-import android.net.Uri;
-import android.support.v7.app.ActionBar;
+import android.os.AsyncTask;
+import android.os.Parcelable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.Menu;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
+import com.github.ag.floatingactionmenu.OptionsFabLayout;
+import com.synnapps.carouselview.CarouselView;
+import com.synnapps.carouselview.ImageClickListener;
+import com.synnapps.carouselview.ImageListener;
 import com.upload.adeogo.dokita.R;
+import com.upload.adeogo.dokita.adapters.NewsAdapter;
+import com.upload.adeogo.dokita.models.Appointment;
+import com.upload.adeogo.dokita.models.MedicalArticle;
+import com.upload.adeogo.dokita.utils.JSONFormat;
+import com.upload.adeogo.dokita.utils.NetworkUtils;
 
-import java.util.Calendar;
+import org.json.JSONException;
 
-import de.hdodenhof.circleimageview.CircleImageView;
+import java.io.IOException;
+import java.net.URL;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import es.dmoral.toasty.Toasty;
+
 
 public class AppointmentActivity extends AppCompatActivity {
 
-    private String mDoctorPhone, mClientPhone, mDoctorName = "", mClientName, mLocation, mTime, mDoctorId, mUserId, mMessage, mKey, mProfileImageUrl, mPhoneNumber;
-    private int mStatus, mYear, mMonth, mDay;
-    private ActionBar mActionBar;
+    private static final int LOADER_ID = 1;
+    @BindView(R.id.search_image_button)
+    ImageView mSearchImageButton;
+    @BindView(R.id.mainLayout)
+    NestedScrollView mMainLayout;
+    @BindView(R.id.newsRecyclerView)
+    RecyclerView mNewsRecyclerView;
+    @BindView(R.id.searchView)
+    EditText mSearchViewEditText;
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
 
-    private TextView mMessageTextview, mDoctorNameTextView, mDateTextView;
-    private ImageView mCallImageView, mChatImageView;
-    private CircleImageView mDoctorImageView;
+    @BindView(R.id.fab_l)
+    OptionsFabLayout fabWithOptions;
 
-    private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mDoctorProfileReference;
-    private ChildEventListener mProfileListener;
+
+    @BindView(R.id.carouselView)
+    CarouselView carouselView;
+    @BindView(R.id.poweredClick)
+    TextView mPoweredTextView;
+
+    int[] sampleImages = {R.drawable.test_advert_1, R.drawable.image2, R.drawable.image3};
+    private LinearLayoutManager mNewsLayoutManager;
+    private String mSearchQuery;
+    private Parcelable mListState;
+    private List<MedicalArticle> medicalArticles = null;
+    private NewsAdapter newsAdapter;
+    private ImageListener imageListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appointment);
 
-        mActionBar = getSupportActionBar();
-        mActionBar.setDisplayHomeAsUpEnabled(true);
+        ButterKnife.bind(this);
 
-        Calendar calendar = Calendar.getInstance();
-
-        int thisYear = calendar.get(Calendar.YEAR);
-
-        int thisMonth = calendar.get(Calendar.MONTH);
-
-        int thisDay = calendar.get(Calendar.DAY_OF_MONTH);
-
-
-        mCallImageView = findViewById(R.id.dialImageView);
-        mDoctorImageView = findViewById(R.id.doctorImageView);
-        mChatImageView = findViewById(R.id.chatImageView);
-
-        mDoctorNameTextView = findViewById(R.id.doctorNameTextVIew);
-        mMessageTextview = findViewById(R.id.messageTextView);
-        mDateTextView = findViewById(R.id.dateTextView);
-
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-
-        Intent intent = getIntent();
-
-        mKey = intent.getStringExtra("key");
-        mUserId = intent.getStringExtra("userId");
-        mDoctorId = intent.getStringExtra("doctorId");
-        mTime = intent.getStringExtra("time");
-        mDay = intent.getIntExtra("day", 0);
-        mMonth = intent.getIntExtra("month", 0);
-        mYear = intent.getIntExtra("year", 0);
-        mDoctorPhone = intent.getStringExtra("doctor_phone");
-        mClientPhone = intent.getStringExtra("client_phone");
-        mDoctorName = intent.getStringExtra("doctorName");
-        mClientName = intent.getStringExtra("clientName");
-        mLocation = intent.getStringExtra("location");
-        mStatus = intent.getIntExtra("status", 0);
-        mMessage = intent.getStringExtra("message");
-
-        mChatImageView.setOnClickListener(new View.OnClickListener() {
+        imageListener = new ImageListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(AppointmentActivity.this, QuestionActivity.class);
-                intent.putExtra("doctor_name", mDoctorName);
-                intent.putExtra("doctor_id", mDoctorId);
-                intent.putExtra("which", 0);
-                startActivity(intent);
+            public void setImageForPosition(int position, ImageView imageView) {
+                imageView.setImageResource(sampleImages[position]);
+            }
+        };
+
+        carouselView.setPageCount(sampleImages.length);
+        carouselView.setImageListener(imageListener);
+        carouselView.setImageClickListener(new ImageClickListener() {
+            @Override
+            public void onClick(int position) {
+                Toasty.success(AppointmentActivity.this, "Clicked item: " + position, Toast.LENGTH_SHORT, false).show();
+
             }
         });
 
-        mDoctorProfileReference = mFirebaseDatabase.getReference().child("new_doctors").child("all_profiles").child(mDoctorId);
-
-        switch (mStatus){
-            case 0:
-                mActionBar.setTitle(getString(R.string.action_pending));
-                break;
-            case 1:
-                mActionBar.setTitle(getString(R.string.action_approved));
-                break;
-            case 2:
-                mActionBar.setTitle(getString(R.string.action_cancelled));
-                mChatImageView.setVisibility(View.GONE);
-                break;
-            case 3:
-                mActionBar.setTitle(getString(R.string.action_done));
-                break;
-        }
-
-        mMessageTextview.setText(mMessage);
-        mDoctorNameTextView.setText(mDoctorName);
-
-        String Date = "";
-        if (mDay == thisDay && mMonth == thisMonth && mYear == thisYear){
-            Date = "Today, " + mTime;
-        }else if (mDay == thisDay + 1 && mMonth == thisMonth + 1 && mYear == thisYear + 1){
-            Date = "Tomorrow, " + mTime;
-        }else
-            Date = mTime + " on " + mDay + "/" + mMonth + 1 + "/" + mYear;
-
-        mDateTextView.setText(Date);
-
-        if (mStatus == 2){
-            mCallImageView.setVisibility(View.INVISIBLE);
-        }else {
-            mCallImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + mClientPhone));
-                    startActivity(intent);
+        //Set main fab clicklistener.
+        fabWithOptions.setMainFabOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (fabWithOptions.isOptionsMenuOpened()) {
+                    fabWithOptions.closeOptionsMenu();
                 }
-            });
-        }
+            }
+        });
 
-        attachDatabaseReadListener();
+        //Set mini fabs clicklisteners.
+        fabWithOptions.setMiniFabSelectedListener(new OptionsFabLayout.OnMiniFabSelectedListener() {
+            @Override
+            public void onMiniFabSelected(MenuItem fabItem) {
+                switch (fabItem.getItemId()) {
+                    case R.id.action_profile:
+                        Intent intent = new Intent(AppointmentActivity.this, ProfileActivity.class);
+                        startActivity(intent);
+                        break;
+                    case R.id.action_cart:
+                        Snackbar.make(mMainLayout, "Feature Coming Soon!", Snackbar.LENGTH_LONG).show();
+                        break;
+
+                    case R.id.action_settings:
+                        Snackbar.make(mMainLayout, "Feature Coming Soon!", Snackbar.LENGTH_LONG).show();
+                        break;
+
+                    case R.id.action_messages:
+                        Intent chatIntent = new Intent(AppointmentActivity.this, QuestionListActivity.class);
+                        startActivity(chatIntent);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+
+        newsAdapter = new NewsAdapter(this);
+
+        mNewsLayoutManager = new LinearLayoutManager(this);
+
+
+        mNewsRecyclerView.setLayoutManager(mNewsLayoutManager);
+        mNewsRecyclerView.setAdapter(newsAdapter);
+
+        updateLayout();
+
+
+        mPoweredTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        mSearchImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToSearch();
+            }
+        });
+
+        mSearchViewEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                return goToSearch();
+            }
+        });
+    }
+
+    private boolean goToSearch() {
+        mSearchQuery = mSearchViewEditText.getText().toString();
+        if (TextUtils.isEmpty(mSearchQuery)) {
+            Snackbar.make(mMainLayout, "Enter Search Data!", Snackbar.LENGTH_LONG).show();
+            return false;
+        } else {
+            Intent intent = new Intent(AppointmentActivity.this, SearchResultActivity.class);
+            intent.putExtra("query", mSearchQuery);
+            startActivity(intent);
+            return true;
+        }
 
     }
 
-    private void attachDatabaseReadListener() {
-        if (mProfileListener == null) {
-            mProfileListener = new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-                    if (TextUtils.equals(dataSnapshot.getKey(), "pictureUrl")){
-                        mProfileImageUrl = dataSnapshot.getValue().toString();
-
-                        Glide.with(AppointmentActivity.this)
-                                .load(mProfileImageUrl)
-                                .into(mDoctorImageView);
-//
-//                        Picasso.with(AppointmentActivity.this)
-//                                .load(mProfileImageUrl)
-//                                .resize(500, 500)
-//                                .centerCrop()
-//                                .into();
-                    }
-                }
-
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                }
-
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                }
-
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            };
-
-            mDoctorProfileReference.addChildEventListener(mProfileListener);
-        }
+    public void updateLayout() {
+        new LoadNewsTask().execute();
     }
 
+
+    public class LoadNewsTask extends AsyncTask<Void, Void, String> {
+        @Override
+        protected String doInBackground(Void... voids) {
+            URL url = NetworkUtils.buildUrl();
+            String reply = null;
+            try {
+                reply = NetworkUtils.getResponseFromHttpUrl(url);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return reply;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            try {
+                medicalArticles = JSONFormat.getObjectArray(s);
+                progressBar.setVisibility(View.GONE);
+                newsAdapter.swapData(medicalArticles);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

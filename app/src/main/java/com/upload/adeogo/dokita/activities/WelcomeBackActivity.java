@@ -77,7 +77,7 @@ public class WelcomeBackActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // User is signed in
+                    // PatientData is signed in
                     userId = user.getUid();
 
                     mReference = mDatabase.getReference().child("new_doctors").child("all_profiles").child(userId).child("name");
@@ -88,12 +88,12 @@ public class WelcomeBackActivity extends AppCompatActivity {
 
                     new Timer().schedule(new TimerTask(){
                         public void run() {
-                            Intent intent = new Intent(WelcomeBackActivity.this, OpeningAcvtivity.class);
+                            Intent intent = new Intent(WelcomeBackActivity.this, AppointmentActivity.class);
                             startActivity(intent);
                         }
                     }, 2000);
                 } else {
-                    // User is signed out
+                    // PatientData is signed out
                     onSignedOutCleanup();
                     startActivity(new Intent(WelcomeBackActivity.this, LoginActivity.class));
                 }

@@ -91,6 +91,7 @@ public class OpeningAcvtivity extends AppCompatActivity {
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
 
+
         mDoctorsReference = mFirebaseDatabase.getReference().child("new_doctors");
 
 
@@ -190,10 +191,10 @@ public class OpeningAcvtivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // User is signed in
+                    // PatientData is signed in
                     onSignedInInitialize(user.getDisplayName());
                 } else {
-                    // User is signed out
+                    // PatientData is signed out
                     onSignedOutCleanup();
                     startActivity(new Intent(OpeningAcvtivity.this, LoginActivity.class));
                 }
