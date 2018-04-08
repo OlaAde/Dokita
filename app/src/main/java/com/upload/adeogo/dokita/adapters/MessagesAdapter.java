@@ -5,5 +5,4 @@ package com.upload.adeogo.dokita.adapters;
  */
 
 public class MessagesAdapter {
-
 }

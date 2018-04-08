@@ -15,13 +15,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.OpeningAcvtivity"
-            android:launchMode="singleTop"
-            android:theme="@style/MyTheme2" />
-        <activity
-            android:name=".activities.GetDataActivity"
-            android:parentActivityName=".activities.OpeningAcvtivity" />
-        <activity
             android:name=".activities.SignedMainActivity"
             android:parentActivityName=".activities.ProfileActivity" />
         <activity
@@ -38,15 +31,7 @@
             android:parentActivityName=".activities.SignedMainActivity" />
         <activity
             android:name=".activities.OrderActivity"
-            android:parentActivityName=".activities.SearchActivity" />
-        <activity
-            android:name=".activities.SearchActivity"
-            android:launchMode="singleTop"
-            android:parentActivityName=".activities.OpeningAcvtivity" />
-        <activity
-            android:name=".activities.QuestionActivity"
-            android:launchMode="singleTask"
-            android:parentActivityName=".activities.OpeningAcvtivity" />
+            android:parentActivityName=".activities.SearchResultActivity" />
         <activity
             android:name=".activities.WelcomeBackActivity"
             android:noHistory="true"
@@ -63,10 +48,10 @@
 
         <activity
             android:name=".activities.ProfileActivity"
-            android:parentActivityName=".activities.OpeningAcvtivity" />
+            android:parentActivityName=".activities.AppointmentActivity" />
         <activity
             android:name=".activities.QuestionListActivity"
-            android:parentActivityName=".activities.OpeningAcvtivity" />
+            android:parentActivityName=".activities.AppointmentActivity" />
         <activity
             android:name=".activities.LoginActivity"
             android:theme="@style/MyTheme2" />
@@ -123,7 +108,7 @@
             android:name=".activities.SearchResultActivity"
             android:parentActivityName=".activities.AppointmentActivity" />
 
-        <activity android:name=".activities.TestChatActivity"
+        <activity android:name=".activities.ChatActivity"
             android:theme="@style/ChatTheme">
 
 

@@ -4,12 +4,11 @@ package com.upload.adeogo.dokita.models;
  * Created by ademi on 23/03/2018.
  */
 
-import com.stfalcon.chatkit.commons.models.IUser;
 
 /*
  * Created by troy379 on 04.04.17.
  */
-public class User implements IUser {
+public class User implements IUser, com.stfalcon.chatkit.commons.models.IUser {
 
     private String id;
     private String name;

@@ -2,20 +2,17 @@ package com.upload.adeogo.dokita.activities;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,36 +22,27 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.upload.adeogo.dokita.R;
-import com.upload.adeogo.dokita.adapters.SearchAdapter;
-import com.upload.adeogo.dokita.models.Appointment;
-import com.github.badoualy.datepicker.DatePickerTimeline;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.upload.adeogo.dokita.R;
+import com.upload.adeogo.dokita.models.Appointment;
 import com.upload.adeogo.dokita.models.Notification;
 import com.upload.adeogo.dokita.services.NotifyService;
 import com.upload.adeogo.dokita.utils.IdGenerator;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 import java.util.Random;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class OrderActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
 
@@ -276,7 +264,7 @@ public class OrderActivity extends AppCompatActivity implements TimePickerDialog
         mMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(OrderActivity.this, QuestionActivity.class);
+                Intent intent = new Intent(OrderActivity.this, ChatActivity.class);
                 intent.putExtra("doctor_name", mDoctorName);
                 intent.putExtra("doctor_id", doctor_id);
                 intent.putExtra("pictureUrl", mPictureUrl);
@@ -285,7 +273,6 @@ public class OrderActivity extends AppCompatActivity implements TimePickerDialog
             }
         });
     }
-
 
     private void sendAppointment(){
 
@@ -357,9 +344,7 @@ public class OrderActivity extends AppCompatActivity implements TimePickerDialog
             }
         });
 
-
         input.addTextChangedListener(new TextWatcher() {
-
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE)

@@ -1,6 +1,5 @@
 package com.upload.adeogo.dokita.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -28,9 +27,6 @@ import com.upload.adeogo.dokita.models.ChatHead;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class QuestionListActivity extends AppCompatActivity implements ListAdapter.ListAdapterOnclickHandler {
 
@@ -83,7 +79,7 @@ public class QuestionListActivity extends AppCompatActivity implements ListAdapt
                 if (user != null) {
                     // PatientData is signed in
                     userId = user.getUid();
-                    mChatQuery = mFirebaseDatabase.getReference().child("users").child(userId).child("questions").child("chat_head").child("doctors").orderByChild("unixTime");
+                    mChatQuery = mFirebaseDatabase.getReference().child("questions").child("users").child(userId).child("chat_head").child("doctors").orderByChild("unixTime");
                     onSignedInInitialize(user.getDisplayName());
                 } else {
                     // PatientData is signed out
@@ -92,7 +88,6 @@ public class QuestionListActivity extends AppCompatActivity implements ListAdapt
                 }
             }
         };
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -185,7 +180,7 @@ public class QuestionListActivity extends AppCompatActivity implements ListAdapt
 
     @Override
     public void voidMethod(List<ChatHead> list, int adapterPosition) {
-        Intent intent = new Intent(this, QuestionActivity.class);
+        Intent intent = new Intent(this, ChatActivity.class);
         ChatHead chatHead = list.get(adapterPosition);
         intent.putExtra("doctor_id", chatHead.getUserId());
         intent.putExtra("doctor_name", chatHead.getUserName());

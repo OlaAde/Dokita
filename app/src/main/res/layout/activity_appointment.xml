@@ -142,15 +142,18 @@
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
+    <!--custom:close_src="@drawable/ic_close_black_24dp"-->
+    <!--custom:open_src="@drawable/ic_more_vert_black_24dp"-->
 
     <com.github.ag.floatingactionmenu.OptionsFabLayout
         android:id="@+id/fab_l"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        custom:color="@color/colorAccent"
+
+        custom:src="@drawable/ic_more_vert_black_24dp"
+        custom:color="#2196f3"
         custom:options_color="@color/green_fab"
-        custom:options_menu="@menu/fabs"
-        custom:src="@drawable/ic_more_vert_black_24dp" />
+        custom:options_menu="@menu/fabs" />
 
 
 </android.support.design.widget.CoordinatorLayout>

@@ -41,6 +41,8 @@
     <string name="action_main_page">Main Page</string>
     <string name="thank_you_message">Thanks For Your Feedback</string>
     <string name="title_activity_appointment_view">AppointmentViewActivity</string>
+    <string name="date_header_today">Today</string>
+    <string name="date_header_yesterday">Yesterday</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 

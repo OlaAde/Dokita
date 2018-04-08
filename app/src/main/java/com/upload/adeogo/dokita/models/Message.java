@@ -4,8 +4,7 @@ package com.upload.adeogo.dokita.models;
  * Created by ademi on 23/03/2018.
  */
 
-import com.stfalcon.chatkit.commons.models.IMessage;
-import com.stfalcon.chatkit.commons.models.IUser;
+import com.google.firebase.database.Exclude;
 import com.stfalcon.chatkit.commons.models.MessageContentType;
 
 import java.util.Date;
@@ -15,7 +14,7 @@ import java.util.Date;
  */
 public class Message implements IMessage,
         MessageContentType.Image, /*this is for default image messages implementation*/
-        MessageContentType /*and this one is for custom content type (in this case - voice message)*/ {
+        MessageContentType, com.stfalcon.chatkit.commons.models.IMessage /*and this one is for custom content type (in this case - voice message)*/ {
 
     private String id;
     private String text;
@@ -37,12 +36,14 @@ public class Message implements IMessage,
         this.voice = voice;
     }
 
-
     public Message(String id, User patientData, String text, Date createdAt) {
         this.id = id;
         this.text = text;
         this.user = patientData;
         this.createdAt = createdAt;
+    }
+
+    public Message() {
     }
 
     @Override
@@ -60,6 +61,7 @@ public class Message implements IMessage,
         return createdAt;
     }
 
+    @Exclude
     @Override
     public User getUser() {
         return this.user;

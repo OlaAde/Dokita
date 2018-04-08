@@ -8,13 +8,12 @@ import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.upload.adeogo.dokita.activities.ProfileActivity;
-import com.upload.adeogo.dokita.activities.QuestionActivity;
 import com.upload.adeogo.dokita.R;
+import com.upload.adeogo.dokita.activities.ChatActivity;
 
 import java.util.Map;
 
@@ -60,7 +59,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Intent resultIntent = null;
 
             if (TextUtils.equals(type, "0")){
-                resultIntent = new Intent(this, QuestionActivity.class);
+                resultIntent = new Intent(this, ChatActivity.class);
                 resultIntent.putExtra("which", Integer.parseInt(which));
                 resultIntent.putExtra("pictureUrl", imageUrl);
                 resultIntent.putExtra("doctor_id", uid);
